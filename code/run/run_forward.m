@@ -18,6 +18,7 @@ function [u,t,rec_x,rec_z]=run_forward
 
 path(path,'../propagation/');
 path(path,'../../input/');
+path(path,'../../input/interferometry');
 
 input_parameters;
 nt=5*round(nt/5);
@@ -123,6 +124,11 @@ for i=1:n_receivers
 
 end
 
+%- initialise seismograms -------------------------------------------------
+
+displacement_seismograms=zeros(n_receivers,nt);
+velocity_seismograms=zeros(n_receivers,nt);
+
 %- initialise absorbing boundary taper a la Cerjan ------------------------
 
 %- left boundary
@@ -142,18 +148,20 @@ if (absorb_top==1)
     absbound=absbound.*(double([Z'<(Lz-width)])+exp(-(Z'-(Lz-width)).^2/(2*width)^2).*double([Z'>=(Lz-width)]));
 end
 
-%==========================================================================
-% initialise seismograms
-%==========================================================================
+%- initialise interferometry ----------------------------------------------
 
-displacement_seismograms=zeros(n_receivers,nt);
-velocity_seismograms=zeros(n_receivers,nt);
+input_interferometry;
+w_sample=2*pi*f_sample;
+
+%- Fourier transform of the forward Greens function
+G=zeros(nx,nz,length(f_sample));
 
 %==========================================================================
 % iterate
 %==========================================================================
 
 figure(h_vel);
+t=0.0;
 
 for n=1:nt
     
@@ -190,6 +198,12 @@ for n=1:nt
         v_forward(nt/5+1-n/5,:,:)=v(:,:);
     end
     
+    %- accumulate Fourier transform of the velocity field -----------------
+    
+    for k=1:length(w_sample)
+        G(:,:,k)=G(:,:,k)+v(:,:)*exp(-sqrt(-1)*w_sample(k)*t)*dt;
+    end
+    
     %- plot velocity field every 4th time step ----------------------------
     
     if (mod(n,4)==0)
@@ -218,13 +232,25 @@ for n=1:nt
         
     end
     
+    %- increase time ------------------------------------------------------
+    
+    t=t+dt;
+    
 end
 
 %==========================================================================
-% output and store forward field
+% output 
 %==========================================================================
 
+%- store time-reversed forward field --------------------------------------
+
 save('../../output/v_forward','v_forward');
+
+%- store Fourier transformed velocity Greens function -----------------
+
+save('../../output/G','G');
+
+%- compute time axis and displacement seismograms -------------------------
 
 t=0:dt:dt*(nt-1);
 u=cumsum(velocity_seismograms,2)*dt;

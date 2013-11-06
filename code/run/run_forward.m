@@ -13,13 +13,14 @@ function [u,t,rec_x,rec_z]=run_forward
 %==========================================================================
 
 %==========================================================================
-% read input and set paths
+% set paths and read input
 %==========================================================================
+
+path(path,'../propagation/');
+path(path,'../../input/');
 
 input_parameters;
 nt=5*round(nt/5);
-
-path(path,'helper_programmes/');
 
 h_vel=figure;
 load cm;
@@ -198,7 +199,7 @@ end
 % output and store forward field
 %==========================================================================
 
-save('v_forward','v_forward');
+save('../../output/v_forward','v_forward');
 
 t=0:dt:dt*(nt-1);
 u=cumsum(velocity_seismograms,2)*dt;

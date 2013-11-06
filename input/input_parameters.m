@@ -2,7 +2,7 @@
 % path where seismic sources are located
 %==========================================================================
 
-source_path='./seismic_sources/forward/';
+source_path='../../input/sources/forward/';
 
 %==========================================================================
 % set basic simulation parameters
@@ -23,7 +23,7 @@ order=4;    % finite-difference order (2 or 4)
 % model type
 %==========================================================================
 
-model_type='target';
+model_type=1;
 
 % 1=homogeneous 
 % 2=homogeneous with localised density perturbation

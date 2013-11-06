@@ -55,9 +55,11 @@ xlabel('x [m]');
 ylabel('z [m]');
 colorbar
     
-%- dynamic fields ---------------------------------------------------------
+%- dynamic fields and absorbing boundary field ----------------------------
 
 v=zeros(nx,nz);
+absbound=ones(nx,nz);
+
 v_forward=zeros(nt/5,nx,nz);
 
 sxy=zeros(nx-1,nz);
@@ -120,7 +122,26 @@ for i=1:n_receivers
     rec_z_id(i)=min(find(min(abs(z-rec_z(i)))==abs(z-rec_z(i))));
 
 end
-   
+
+%- initialise absorbing boundary taper a la Cerjan ------------------------
+
+%- left boundary
+if (absorb_left==1)
+    absbound=absbound.*(double([X'>width])+exp(-(X'-width).^2/(2*width)^2).*double([X'<=width]));
+end
+%- right boundary
+if (absorb_right==1)
+    absbound=absbound.*(double([X'<(Lx-width)])+exp(-(X'-(Lx-width)).^2/(2*width)^2).*double([X'>=(Lx-width)]));
+end
+%- bottom boundary
+if (absorb_bottom==1)
+    absbound=absbound.*(double([Z'>width])+exp(-(Z'-width).^2/(2*width)^2).*double([Z'<=width]));
+end
+%- top boundary
+if (absorb_top==1)
+    absbound=absbound.*(double([Z'<(Lz-width)])+exp(-(Z'-(Lz-width)).^2/(2*width)^2).*double([Z'>=(Lz-width)]));
+end
+
 %==========================================================================
 % initialise seismograms
 %==========================================================================
@@ -147,6 +168,10 @@ for n=1:nt
     %- update velocity field ----------------------------------------------
     
     v=v+dt*DS./rho;
+    
+    %- apply absorbing boundary taper -------------------------------------
+    
+    v=v.*absbound;
     
     %- compute derivatives of current velocity and update stress tensor ---
     

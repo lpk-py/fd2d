@@ -49,3 +49,14 @@ model_type=1;
 %- a large number of receivers in a closed rectangular configuration
 rec_x=[50.0  50.0  50.0  50.0  50.0   50.0    70.0  90.0 110.0 130.0   70.0  90.0 110.0 130.0  150.0 150.0 150.0 150.0 150.0  150.0];
 rec_z=[70.0  90.0 110.0 130.0 150.0  170.0    70.0  70.0  70.0  70.0  170.0 170.0 170.0 170.0   70.0  90.0 110.0 130.0 150.0  170.0];
+
+%==========================================================================
+% absorbing boundaries
+%==========================================================================
+
+width=30.0;     % width of the boundary layer in km
+
+absorb_left=1;  % absorb waves on the left boundary
+absorb_right=1; % absorb waves on the right boundary
+absorb_top=1;   % absorb waves on the top boundary
+absorb_bottom=1;% absorb waves on the bottom boundary

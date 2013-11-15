@@ -38,7 +38,7 @@ model_type=1;
 % simulation mode
 %==========================================================================
 
-simulation_mode='forward_correlation';
+simulation_mode='correlation';
 
 % 'forward'                 regular forward simulation
 % 'forward_correlation'     forward simulation where Fourier transform is computed on-the-fly (preparation to compute correlation function)

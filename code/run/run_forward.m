@@ -56,15 +56,81 @@ xlabel('x [m]');
 ylabel('z [m]');
 colorbar
 
-%- time axis --------------------------------------------------------------
+%- forward simulations ('forward', 'forward_correlation') -----------------
 
-if (strcmp(simulation_mode,'forward'))
+if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation'))
 
+    %- time axis ----------------------------------------------------------
+    
     t=0:dt:dt*(nt-1);
     
-elseif (strcmp(simulation_mode,'forward_correlation') || strcmp(simulation_mode,'correlation'))
+    %- read seismic source locations --------------------------------------
 
+    fid=fopen([source_path 'source_locations'],'r');
+    src_x=zeros(1);
+    src_z=zeros(1);
+
+    k=1;
+    while (feof(fid)==0)
+        src_x(k)=fscanf(fid,'%g',1);
+        src_z(k)=fscanf(fid,'%g',1);
+        fgetl(fid);
+        k=k+1;
+    end
+
+    fclose(fid);
+    
+    %- read source time functions -----------------------------------------
+
+    ns=length(src_x);
+    stf=zeros(ns,nt);
+
+    for n=1:ns
+        fid=fopen([source_path 'src_' num2str(n)],'r');
+        stf(n,1:nt)=fscanf(fid,'%g',nt);
+    end
+
+    %- compute indices for source locations -------------------------------
+
+    src_x_id=zeros(1,ns);
+    src_z_id=zeros(1,ns);
+
+    x=0:dx:Lx;
+    z=0:dz:Lz;
+
+    for i=1:ns
+
+        src_x_id(i)=min(find(min(abs(x-src_x(i)))==abs(x-src_x(i))));
+        src_z_id(i)=min(find(min(abs(z-src_z(i)))==abs(z-src_z(i))));
+
+    end
+    
+    %- initialise interferometry ------------------------------------------
+    
+    if strcmp(simulation_mode,'forward_correlation')
+    
+        input_interferometry;
+        w_sample=2*pi*f_sample;
+
+        %- Fourier transform of the forward Greens function
+        G=zeros(nx,nz,length(f_sample));
+        
+    end
+    
+%- forward simulation to compute correlation function ---------------------     
+    
+elseif strcmp(simulation_mode,'correlation')
+
+    %- time axis ----------------------------------------------------------
+    
     t=-(nt-1)*dt:dt:(nt-1)*dt;
+    
+    %- initialise interferometry ------------------------------------------
+    
+    input_interferometry;
+    w_sample=2*pi*f_sample;
+    %- load frequency-domain Greens function
+    load('../../output/G.mat');
     
 end
  
@@ -77,47 +143,6 @@ v_forward=zeros(nt/5,nx,nz);
 
 sxy=zeros(nx-1,nz);
 szy=zeros(nx,nz-1);
-
-%- read seismic source locations ------------------------------------------
-
-fid=fopen([source_path 'source_locations'],'r');
-src_x=zeros(1);
-src_z=zeros(1);
-
-k=1;
-while (feof(fid)==0)
-    src_x(k)=fscanf(fid,'%g',1);
-    src_z(k)=fscanf(fid,'%g',1);
-    fgetl(fid);
-    k=k+1;
-end
-
-fclose(fid);
-
-%- read source time functions ---------------------------------------------
-
-ns=length(src_x);
-stf=zeros(ns,nt);
-
-for n=1:ns
-    fid=fopen([source_path 'src_' num2str(n)],'r');
-    stf(n,1:nt)=fscanf(fid,'%g',nt);
-end
-
-%- compute indices for source locations -----------------------------------
-
-src_x_id=zeros(1,ns);
-src_z_id=zeros(1,ns);
-
-x=0:dx:Lx;
-z=0:dz:Lz;
-
-for i=1:ns
-
-    src_x_id(i)=min(find(min(abs(x-src_x(i)))==abs(x-src_x(i))));
-    src_z_id(i)=min(find(min(abs(z-src_z(i)))==abs(z-src_z(i))));
-
-end
 
 %- compute indices for receiver locations ---------------------------------
 
@@ -160,33 +185,47 @@ if (absorb_top==1)
     absbound=absbound.*(double([Z'<(Lz-width)])+exp(-(Z'-(Lz-width)).^2/(2*width)^2).*double([Z'>=(Lz-width)]));
 end
 
-%- initialise interferometry ----------------------------------------------
-
-if (strcmp(simulation_mode,'forward_correlation') || strcmp(simulation_mode,'correlation'))
-
-    input_interferometry;
-    w_sample=2*pi*f_sample;
-
-    %- Fourier transform of the forward Greens function
-    G=zeros(nx,nz,length(f_sample));
-    
-end
-
 %==========================================================================
 % iterate
 %==========================================================================
 
 figure(h_vel);
-t=0.0;
 
-for n=1:nt
+for n=1:length(t)
     
-    %- compute divergence of current stress tensor and add external forces
+    %- compute divergence of current stress tensor ------------------------
     
     DS=div_s(sxy,szy,dx,dz,nx,nz,order);
     
-    for i=1:ns
-        DS(src_x_id(i),src_z_id(i))=DS(src_x_id(i),src_z_id(i))+stf(i,n);
+    %- add point sources --------------------------------------------------
+    
+    if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation'))
+    
+        for i=1:ns
+            DS(src_x_id(i),src_z_id(i))=DS(src_x_id(i),src_z_id(i))+stf(i,n);
+        end
+        
+    end
+    
+    %- add sources of the correlation field -------------------------------
+    
+    if strcmp(simulation_mode,'correlation')
+        
+        %- transform on the fly to the time domain
+        
+        dw=w_sample(2)-w_sample(1);
+        S=zeros(nx,nz);
+        
+        for k=1:length(f_sample)
+            S=S+conj(G(:,:,k))*exp(sqrt(-1)*w_sample(k)*t(n));
+        end
+        
+        S=dw*S/(2*pi);
+        
+        %- add sources
+        
+        DS=DS+real(S);
+          
     end
     
     %- update velocity field ----------------------------------------------
@@ -210,16 +249,20 @@ for n=1:nt
     
     %- store time-reversed history ----------------------------------------
     
-    if (mod(n,5)==0)
-        v_forward(nt/5+1-n/5,:,:)=v(:,:);
+    if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation'))
+    
+        if (mod(n,5)==0)
+            v_forward(nt/5+1-n/5,:,:)=v(:,:);
+        end
+        
     end
     
     %- accumulate Fourier transform of the velocity field -----------------
     
-    if (strcmp(simulation_mode,'forward_correlation') || strcmp(simulation_mode,'correlation'))
+    if strcmp(simulation_mode,'forward_correlation')
     
         for k=1:length(w_sample)
-            G(:,:,k)=G(:,:,k)+v(:,:)*exp(-sqrt(-1)*w_sample(k)*t)*dt;
+            G(:,:,k)=G(:,:,k)+v(:,:)*exp(-sqrt(-1)*w_sample(k)*t(n))*dt;
         end
         
     end
@@ -231,14 +274,15 @@ for n=1:nt
         pcolor(X,Z,v');
         axis image
         hold on
-        for i=1:5
-        for k=1:ns
-            plot(src_x(k),src_z(k),'kx')
+
+        if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation'))
+            for k=1:ns
+                plot(src_x(k),src_z(k),'kx')
+            end
         end
         for k=1:n_receivers
             plot(rec_x(k),rec_z(k),'ko')
         end 
-        end
         hold off
         
         caxis([-max(max(abs(v))) max(max(abs(v)))])
@@ -252,10 +296,6 @@ for n=1:nt
         
     end
     
-    %- increase time ------------------------------------------------------
-    
-    t=t+dt;
-    
 end
 
 %==========================================================================
@@ -268,7 +308,7 @@ save('../../output/v_forward','v_forward');
 
 %- store Fourier transformed velocity Greens function -----------------
 
-if (strcmp(simulation_mode,'forward_correlation') || strcmp(simulation_mode,'correlation'))
+if strcmp(simulation_mode,'forward_correlation')
     save('../../output/G','G');
 end
 

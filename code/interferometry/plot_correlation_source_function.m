@@ -5,7 +5,7 @@ function plot_correlation_source_function(x_plot,z_plot)
 path(path,'../../input/');
 path(path,'../../input/interferometry');
 
-%- load the displacement spectrum field -----------------------------------
+%- load the velocity spectrum field -----------------------------------
 
 load('../../output/G.mat');
 

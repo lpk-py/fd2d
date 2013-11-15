@@ -2,11 +2,11 @@
 
 if strcmp(simulation_mode,'forward_correlation')
     
-    stf=ones(1,length(t));
+    stf=1e9*ones(1,length(t));
     
 elseif strcmp(simulation_mode,'forward')
     
-    stf=ones(1,length(t));
+    stf=1e9*ones(1,length(t));
     stf=butterworth_lp(stf,t,5,f_max,'silent');
     stf=butterworth_hp(stf,t,3,f_min,'silent');
     

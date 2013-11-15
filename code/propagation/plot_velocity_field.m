@@ -17,7 +17,7 @@ if (mod(n,4)==0)
     
     hold off
     
-    if (n<nt/2)
+    if (n<length(t)/2)
         scale=max(max(abs(v)));
     end
     

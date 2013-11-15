@@ -9,3 +9,8 @@
 %- be checked with "plot_correlation_source_function".
 
 f_sample=-1000:5:1000;
+
+%- characteristics of the noise spectrum ----------------------------------
+
+f_peak=300.0;       % peak frequency in Hz
+bandwidth=100.0;    % bandwidth in Hz

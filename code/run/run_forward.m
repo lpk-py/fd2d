@@ -110,6 +110,10 @@ elseif strcmp(simulation_mode,'correlation')
     %- load frequency-domain Greens function
     load('../../output/G.mat');
     
+    %- initialise noise spectrum ------------------------------------------
+    
+    make_noise_spectrum;
+    
 end
  
 %- dynamic fields and absorbing boundary field ----------------------------
@@ -195,7 +199,7 @@ for n=1:length(t)
         S=zeros(nx,nz);
         
         for k=1:length(f_sample)
-            S=S+conj(G(:,:,k))*exp(sqrt(-1)*w_sample(k)*t(n));
+            S=S+noise_spectrum(k)*conj(G(:,:,k))*exp(sqrt(-1)*w_sample(k)*t(n));
         end
         
         S=dw*S/(2*pi);

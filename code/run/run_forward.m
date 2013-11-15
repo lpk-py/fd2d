@@ -17,6 +17,7 @@ function [u,t,rec_x,rec_z]=run_forward
 %==========================================================================
 
 path(path,'../propagation/');
+path(path,'../tools/');
 path(path,'../../input/');
 path(path,'../../input/interferometry');
 
@@ -35,26 +36,8 @@ load cm;
 [mu,rho]=define_material_parameters(nx,nz,model_type);
 
 [X,Z,dx,dz]=define_computational_domain(Lx,Lz,nx,nz);
-    
-h_model=figure;
-    
-subplot(1,2,1)
-pcolor(X,Z,mu');
-axis image
-shading flat
-title('mu [N/m^2]')
-xlabel('x [m]');
-ylabel('z [m]');
-colorbar
-    
-subplot(1,2,2)
-pcolor(X,Z,rho');
-axis image
-shading flat
-title('rho [kg/m^3]')
-xlabel('x [m]');
-ylabel('z [m]');
-colorbar
+ 
+plot_model(X,Z,rho,mu);
 
 %- forward simulations ('forward', 'forward_correlation') -----------------
 

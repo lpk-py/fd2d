@@ -35,6 +35,16 @@ model_type=1;
 % 'initial'= read initial model for waveform inversion (mu_initial, rho_initial)
 
 %==========================================================================
+% simulation mode
+%==========================================================================
+
+simulation_mode='forward_correlation';
+
+% 'forward'                 regular forward simulation
+% 'forward_correlation'     forward simulation where Fourier transform is computed on-the-fly (preparation to compute correlation function)
+% 'correlation'             compute correlation functions as output, requires Fourier-transformed Green function to be present
+
+%==========================================================================
 % receiver positions
 %==========================================================================
 

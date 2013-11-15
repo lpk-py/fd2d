@@ -55,7 +55,19 @@ title('rho [kg/m^3]')
 xlabel('x [m]');
 ylabel('z [m]');
 colorbar
+
+%- time axis --------------------------------------------------------------
+
+if (strcmp(simulation_mode,'forward'))
+
+    t=0:dt:dt*(nt-1);
     
+elseif (strcmp(simulation_mode,'forward_correlation') || strcmp(simulation_mode,'correlation'))
+
+    t=-(nt-1)*dt:dt:(nt-1)*dt;
+    
+end
+ 
 %- dynamic fields and absorbing boundary field ----------------------------
 
 v=zeros(nx,nz);
@@ -150,11 +162,15 @@ end
 
 %- initialise interferometry ----------------------------------------------
 
-input_interferometry;
-w_sample=2*pi*f_sample;
+if (strcmp(simulation_mode,'forward_correlation') || strcmp(simulation_mode,'correlation'))
 
-%- Fourier transform of the forward Greens function
-G=zeros(nx,nz,length(f_sample));
+    input_interferometry;
+    w_sample=2*pi*f_sample;
+
+    %- Fourier transform of the forward Greens function
+    G=zeros(nx,nz,length(f_sample));
+    
+end
 
 %==========================================================================
 % iterate
@@ -200,8 +216,12 @@ for n=1:nt
     
     %- accumulate Fourier transform of the velocity field -----------------
     
-    for k=1:length(w_sample)
-        G(:,:,k)=G(:,:,k)+v(:,:)*exp(-sqrt(-1)*w_sample(k)*t)*dt;
+    if (strcmp(simulation_mode,'forward_correlation') || strcmp(simulation_mode,'correlation'))
+    
+        for k=1:length(w_sample)
+            G(:,:,k)=G(:,:,k)+v(:,:)*exp(-sqrt(-1)*w_sample(k)*t)*dt;
+        end
+        
     end
     
     %- plot velocity field every 4th time step ----------------------------
@@ -248,9 +268,10 @@ save('../../output/v_forward','v_forward');
 
 %- store Fourier transformed velocity Greens function -----------------
 
-save('../../output/G','G');
+if (strcmp(simulation_mode,'forward_correlation') || strcmp(simulation_mode,'correlation'))
+    save('../../output/G','G');
+end
 
-%- compute time axis and displacement seismograms -------------------------
+%- displacement seismograms -----------------------------------------------
 
-t=0:dt:dt*(nt-1);
 u=cumsum(velocity_seismograms,2)*dt;

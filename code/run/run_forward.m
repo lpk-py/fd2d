@@ -17,7 +17,6 @@ function [u,t,rec_x,rec_z]=run_forward
 %==========================================================================
 
 path(path,'../propagation/');
-path(path,'../tools/');
 path(path,'../../input/');
 path(path,'../../input/interferometry');
 
@@ -25,7 +24,7 @@ input_parameters;
 nt=5*round(nt/5);
 
 h_vel=figure;
-load cm;
+load cm_velocity;
 
 %==========================================================================
 % initialise simulation
@@ -37,7 +36,7 @@ load cm;
 
 [X,Z,dx,dz]=define_computational_domain(Lx,Lz,nx,nz);
  
-plot_model(X,Z,rho,mu);
+plot_model;
 
 %- forward simulations ('forward', 'forward_correlation') -----------------
 
@@ -63,18 +62,10 @@ if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correla
 
     fclose(fid);
     
-    %- read source time functions -----------------------------------------
-
-    ns=length(src_x);
-    stf=zeros(ns,nt);
-
-    for n=1:ns
-        fid=fopen([source_path 'src_' num2str(n)],'r');
-        stf(n,1:nt)=fscanf(fid,'%g',nt);
-    end
-
     %- compute indices for source locations -------------------------------
 
+    ns=length(src_x);
+    
     src_x_id=zeros(1,ns);
     src_z_id=zeros(1,ns);
 
@@ -87,6 +78,10 @@ if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correla
         src_z_id(i)=min(find(min(abs(z-src_z(i)))==abs(z-src_z(i))));
 
     end
+    
+    %- make source time function ------------------------------------------
+
+    make_source_time_function;
     
     %- initialise interferometry ------------------------------------------
     
@@ -185,7 +180,7 @@ for n=1:length(t)
     if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation'))
     
         for i=1:ns
-            DS(src_x_id(i),src_z_id(i))=DS(src_x_id(i),src_z_id(i))+stf(i,n);
+            DS(src_x_id(i),src_z_id(i))=DS(src_x_id(i),src_z_id(i))+stf(n);
         end
         
     end
@@ -252,32 +247,7 @@ for n=1:length(t)
     
     %- plot velocity field every 4th time step ----------------------------
     
-    if (mod(n,4)==0)
-    
-        pcolor(X,Z,v');
-        axis image
-        hold on
-
-        if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation'))
-            for k=1:ns
-                plot(src_x(k),src_z(k),'kx')
-            end
-        end
-        for k=1:n_receivers
-            plot(rec_x(k),rec_z(k),'ko')
-        end 
-        hold off
-        
-        caxis([-max(max(abs(v))) max(max(abs(v)))])
-        colormap(cm);
-        shading interp
-        xlabel('x [m]');
-        ylabel('z [m]');
-        title('velocity field [m/s]');
-        
-        pause(0.01)
-        
-    end
+    plot_velocity_field;
     
 end
 

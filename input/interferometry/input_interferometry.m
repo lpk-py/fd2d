@@ -8,9 +8,10 @@
 %- on the positive time axis in the time-domain source function. This can 
 %- be checked with "plot_correlation_source_function".
 
-f_sample=-1000:5:1000;
+f_sample=-1000:10:1000;
+f_sample=f_sample/5000.0;
 
 %- characteristics of the noise spectrum ----------------------------------
 
-f_peak=300.0;       % peak frequency in Hz
-bandwidth=100.0;    % bandwidth in Hz
+f_peak=1.0/16.0;       % peak frequency in Hz
+bandwidth=0.2/16.0;    % bandwidth in Hz

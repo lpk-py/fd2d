@@ -29,7 +29,7 @@ z_id=min(find(min(abs(z-z_plot))==abs(z-z_plot)));
 
 %- get the spectrum -------------------------------------------------------
 
-s=reshape(G(x_id,z_id,:),length(f_sample),1);
+s=reshape(G_2(x_id,z_id,:),length(f_sample),1);
 s=conj(s);
 
 %- approximate inverse Fourier transform ----------------------------------

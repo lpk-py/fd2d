@@ -246,9 +246,9 @@ for n=1:length(t)
     
     if strcmp(simulation_mode,'forward_correlation')
     
-        for k=1:length(w_sample)
-            G_2(:,:,k)=G_2(:,:,k)+v(:,:)*exp(-sqrt(-1)*w_sample(k)*t(n))*dt;
-        end
+        %for k=1:length(w_sample)
+        %    G_2(:,:,k)=G_2(:,:,k)+v(:,:)*exp(-sqrt(-1)*w_sample(k)*t(n))*dt;
+        %end
         
     end
     
@@ -270,9 +270,9 @@ end
 
 %- store Fourier transformed velocity Greens function -----------------
 
-if strcmp(simulation_mode,'forward_correlation')
-    save('../../output/G_2','G_2');
-end
+%if strcmp(simulation_mode,'forward_correlation')
+%    save('../../output/G_2','G_2');
+%end
 
 %- displacement seismograms -----------------------------------------------
 

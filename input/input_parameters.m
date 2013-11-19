@@ -9,13 +9,13 @@ adjoint_source_path='../../input/sources/adjoint/';
 % set basic simulation parameters
 %==========================================================================
 
-Lx=200.0;   % model extension in x-direction [m]
-Lz=250.0;   % model extension in y-direction [m]
+Lx=1e6;     % model extension in x-direction [m]
+Lz=1e6;     % model extension in y-direction [m]
 
 nx=200;     % grid points in x-direction
-nz=250;     % grid points in z-direction
+nz=200;     % grid points in z-direction
 
-dt=0.0001;  % time step [s]
+dt=0.5;     % time step [s]
 nt=400;     % number of iterations
 
 order=4;    % finite-difference order (2 or 4)
@@ -39,8 +39,8 @@ model_type=1;
 % source-time function
 %==========================================================================
 
-f_min=100.0;     % minimum frequency [Hz]
-f_max=500.0;    % maximum frequency [Hz]
+f_min=0.02;     % minimum frequency [Hz]
+f_max=0.10;     % maximum frequency [Hz]
 
 %==========================================================================
 % simulation mode
@@ -62,18 +62,30 @@ simulation_mode='correlation';
 %rec_z=[70.0 80.0 90.0 100.0 110.0 120.0 130.0 140.0 150.0 160.0 170.0 180.0 70.0 70.0 70.0 70.0 70.0  70.0  70.0  70.0  180.0 180.0 180.0 180.0 180.0 180.0 180.0 180.0];
 
 %- just one receiver
-rec_x=[150.0];
-rec_z=[125.0];
+rec_x=[750000.0];
+rec_z=[500000.0];
 
 %- a large number of receivers in a closed rectangular configuration
 %rec_x=[50.0  50.0  50.0  50.0  50.0   50.0    70.0  90.0 110.0 130.0   70.0  90.0 110.0 130.0  150.0 150.0 150.0 150.0 150.0  150.0];
 %rec_z=[70.0  90.0 110.0 130.0 150.0  170.0    70.0  70.0  70.0  70.0  170.0 170.0 170.0 170.0   70.0  90.0 110.0 130.0 150.0  170.0];
 
+rec_x=zeros(1,49);
+rec_z=zeros(1,49);
+n=1;
+
+for i=200e3:100e3:800e3
+    for j=200e3:100e3:800e3
+        rec_x(n)=i;
+        rec_z(n)=j;
+        n=n+1;
+    end
+end
+
 %==========================================================================
 % absorbing boundaries
 %==========================================================================
 
-width=30.0;     % width of the boundary layer in km
+width=100000.0;     % width of the boundary layer in km
 
 absorb_left=1;  % absorb waves on the left boundary
 absorb_right=1; % absorb waves on the right boundary
@@ -84,5 +96,5 @@ absorb_bottom=1;% absorb waves on the bottom boundary
 % make wavepropagation movie
 %==========================================================================
 
-make_movie='no';                           % 'yes' or 'no'
-movie_file='../../output/forward_field.mp4';    % output file name, should be .mp4
+make_movie='yes';                           % 'yes' or 'no'
+movie_file='../../output/cc_homogeneous_distribution.mp4';    % output file name, should be .mp4

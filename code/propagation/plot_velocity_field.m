@@ -1,8 +1,12 @@
 if (mod(n,4)==0)
     
+    %- plot velocity field ------------------------------------------------
+    
     pcolor(X,Z,v')
     axis image
     hold on
+    
+    %- plot source and receiver positions ---------------------------------
     
     if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation'))
         
@@ -17,17 +21,31 @@ if (mod(n,4)==0)
     
     hold off
     
-    if (n<length(t)/2)
+    %- scale, label, etc ... ----------------------------------------------
+    
+    if (n<0.8*length(t))
         scale=max(max(abs(v)));
     end
     
     caxis([-scale scale])
     colormap(cm);
     shading interp
-    xlabel('x [m]');
-    ylabel('z [m]');
-    title('velocity field [m/s]');
+    xlabel('x [m]','FontSize',20);
+    ylabel('z [m]','FontSize',20);
+    title('velocity field [m/s]','FontSize',20);
         
     pause(0.01)
+    
+    %- record movie -------------------------------------------------------
+    
+    if exist('movie_index','var')
+        movie_index=movie_index+1;
+    else
+        movie_index=1;
+    end
+    
+    if strcmp(make_movie,'yes')
+        M(movie_index)=getframe(gcf);
+    end
             
 end

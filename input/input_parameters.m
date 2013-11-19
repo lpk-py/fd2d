@@ -15,7 +15,7 @@ nx=200;     % grid points in x-direction
 nz=250;     % grid points in z-direction
 
 dt=0.0001;  % time step [s]
-nt=650;     % number of iterations
+nt=400;     % number of iterations
 
 order=4;    % finite-difference order (2 or 4)
 
@@ -45,7 +45,7 @@ f_max=5000.0;    % maximum frequency [Hz]
 % simulation mode
 %==========================================================================
 
-simulation_mode='forward_correlation';
+simulation_mode='correlation';
 
 % 'forward'                 regular forward simulation
 % 'forward_correlation'     forward simulation where Fourier transform is computed on-the-fly (preparation to compute correlation function)
@@ -82,5 +82,5 @@ absorb_bottom=1;% absorb waves on the bottom boundary
 % make wavepropagation movie
 %==========================================================================
 
-make_movie='yes';                   % 'yes' or 'no'
-movie_file='../../output/wavemovie.mp4';   % output file name 
+make_movie='yes';                           % 'yes' or 'no'
+movie_file='../../output/forward_field.mp4';    % output file name, should be .mp4

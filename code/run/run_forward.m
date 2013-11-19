@@ -17,13 +17,13 @@ function [u,t,rec_x,rec_z]=run_forward
 %==========================================================================
 
 path(path,'../propagation/');
+path(path,'../interferometry/');
 path(path,'../../input/');
 path(path,'../../input/interferometry');
 
 input_parameters;
 nt=5*round(nt/5);
 
-h_vel=figure;
 load cm_velocity;
 
 %==========================================================================
@@ -110,9 +110,11 @@ elseif strcmp(simulation_mode,'correlation')
     %- load frequency-domain Greens function
     load('../../output/G.mat');
     
-    %- initialise noise spectrum ------------------------------------------
-    
+    %- initialise noise spectrum
     make_noise_spectrum;
+    
+    %- geographic distribution of noise sources
+    make_noise_source_geography;
     
 end
  
@@ -171,7 +173,8 @@ end
 % iterate
 %==========================================================================
 
-figure(h_vel);
+figure;
+set(gca,'FontSize',20);
 
 for n=1:length(t)
     
@@ -206,7 +209,7 @@ for n=1:length(t)
         
         %- add sources
         
-        DS=DS+real(S);
+        DS=DS+noise_source_distribution.*real(S);
           
     end
     
@@ -252,12 +255,6 @@ for n=1:length(t)
     %- plot velocity field every 4th time step ----------------------------
     
     plot_velocity_field;
-    
-    %- make movie ---------------------------------------------------------
-    
-    if strcmp(make_movie,'yes')
-        M(n)=getframe(gcf);
-    end
     
 end
 

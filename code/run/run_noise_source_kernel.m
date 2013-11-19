@@ -21,7 +21,6 @@ path(path,'../../input/');
 path(path,'../../input/interferometry');
 
 input_parameters;
-nt=5*round(nt/5);
 
 load cm_velocity;
 
@@ -39,15 +38,11 @@ plot_model;
 
 %- time axis --------------------------------------------------------------
     
-t=0:dt:dt*(nt-1);
-
-%- make source time function ------------------------------------------
-
-make_source_time_function;
+t=-(nt-1)*dt:dt:(nt-1)*dt;
     
 %- read adjoint source locations ------------------------------------------
 
-fid=fopen([source_path 'source_locations'],'r');
+fid=fopen([adjoint_source_path 'source_locations'],'r');
 src_x=zeros(1);
 src_z=zeros(1);
 
@@ -60,6 +55,17 @@ while (feof(fid)==0)
 end
 
 fclose(fid);
+
+%- read adjoint source time functions -------------------------------------
+
+nt=length(t);
+ns=length(src_x);
+stf=zeros(ns,nt);
+
+for n=1:ns
+    fid=fopen([adjoint_source_path '/src_' num2str(n)],'r');
+    stf(n,1:nt)=fscanf(fid,'%g',nt);
+end
     
 %- compute indices for adjoint source locations ---------------------------
 
@@ -78,10 +84,6 @@ for i=1:ns
 
 end
 
-%- make source time function ----------------------------------------------
-
-make_source_time_function;
-    
 %- initialise interferometry ----------------------------------------------
         
 input_interferometry;
@@ -95,8 +97,6 @@ K=zeros(nx,nz);
 
 v=zeros(nx,nz);
 absbound=ones(nx,nz);
-
-v_forward=zeros(nt/5,nx,nz);
 
 sxy=zeros(nx-1,nz);
 szy=zeros(nx,nz-1);
@@ -136,7 +136,7 @@ for n=1:length(t)
     %- add point sources --------------------------------------------------
     
     for i=1:ns
-        DS(src_x_id(i),src_z_id(i))=DS(src_x_id(i),src_z_id(i))+stf(n);
+        DS(src_x_id(i),src_z_id(i))=DS(src_x_id(i),src_z_id(i))+stf(i,n);
     end
     
     %- update velocity field ----------------------------------------------
@@ -154,12 +154,14 @@ for n=1:length(t)
      
     %- accumulate Fourier transform of the velocity field -----------------
     
-    G_1(:,:,k)=G_1(:,:,k)+v(:,:)*exp(-sqrt(-1)*w_sample(k)*t(n))*dt;
+    for k=1:length(w_sample)   
+        G_1(:,:,k)=G_1(:,:,k)+v(:,:)*exp(-sqrt(-1)*w_sample(k)*t(n))*dt;
+    end
     
     %- plot velocity field every 4th time step ----------------------------
     
     plot_velocity_field;
-    
+
 end
 
 %==========================================================================
@@ -171,7 +173,7 @@ load('../../output/G_2.mat');
 
 %- multiply fields and integrate over frequency
 for k=1:length(w_sample)
-    K=K+G_1(:,:,k).*conj(G_2(:,:,k));
+    K=K+G_1(:,:,k).*conj(G_2(:,:,k))*dw/(sqrt(-1)*w_sample(k)+eps);
 end
 
 %==========================================================================

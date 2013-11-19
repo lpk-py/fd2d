@@ -3,6 +3,7 @@
 %==========================================================================
 
 source_path='../../input/sources/forward/';
+adjoint_source_path='../../input/sources/adjoint/';
 
 %==========================================================================
 % set basic simulation parameters
@@ -45,7 +46,7 @@ f_max=500.0;    % maximum frequency [Hz]
 % simulation mode
 %==========================================================================
 
-simulation_mode='noise_source_kernel';
+simulation_mode='correlation';
 
 % 'forward'                 regular forward simulation
 % 'forward_correlation'     forward simulation where Fourier transform is computed on-the-fly (preparation to compute correlation function)
@@ -61,12 +62,12 @@ simulation_mode='noise_source_kernel';
 %rec_z=[70.0 80.0 90.0 100.0 110.0 120.0 130.0 140.0 150.0 160.0 170.0 180.0 70.0 70.0 70.0 70.0 70.0  70.0  70.0  70.0  180.0 180.0 180.0 180.0 180.0 180.0 180.0 180.0];
 
 %- just one receiver
-%rec_x=[30.0];
-%rec_z=[125.0];
+rec_x=[150.0];
+rec_z=[125.0];
 
 %- a large number of receivers in a closed rectangular configuration
-rec_x=[50.0  50.0  50.0  50.0  50.0   50.0    70.0  90.0 110.0 130.0   70.0  90.0 110.0 130.0  150.0 150.0 150.0 150.0 150.0  150.0];
-rec_z=[70.0  90.0 110.0 130.0 150.0  170.0    70.0  70.0  70.0  70.0  170.0 170.0 170.0 170.0   70.0  90.0 110.0 130.0 150.0  170.0];
+%rec_x=[50.0  50.0  50.0  50.0  50.0   50.0    70.0  90.0 110.0 130.0   70.0  90.0 110.0 130.0  150.0 150.0 150.0 150.0 150.0  150.0];
+%rec_z=[70.0  90.0 110.0 130.0 150.0  170.0    70.0  70.0  70.0  70.0  170.0 170.0 170.0 170.0   70.0  90.0 110.0 130.0 150.0  170.0];
 
 %==========================================================================
 % absorbing boundaries
@@ -83,5 +84,5 @@ absorb_bottom=1;% absorb waves on the bottom boundary
 % make wavepropagation movie
 %==========================================================================
 
-make_movie='yes';                           % 'yes' or 'no'
+make_movie='no';                           % 'yes' or 'no'
 movie_file='../../output/forward_field.mp4';    % output file name, should be .mp4

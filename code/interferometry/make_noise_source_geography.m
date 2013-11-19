@@ -2,7 +2,7 @@
 
 noise_source_distribution=ones(nx,nz);
 
-noise_source_distribution(:,100:end)=0.0;
+%noise_source_distribution(120:end,:)=0.0;
 
 %- plot geographic distribution of noise sources --------------------------
 

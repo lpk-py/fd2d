@@ -234,7 +234,7 @@ for n=1:length(t)
     
     %- store time-reversed history ----------------------------------------
     
-    if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation'))
+    if (strcmp(simulation_mode,'forward'))
     
         if (mod(n,5)==0)
             v_forward(nt/5+1-n/5,:,:)=v(:,:);
@@ -264,7 +264,9 @@ end
 
 %- store time-reversed forward field --------------------------------------
 
-save('../../output/v_forward','v_forward');
+if strcmp(simulation_mode,'forward')
+    save('../../output/v_forward','v_forward');
+end
 
 %- store Fourier transformed velocity Greens function -----------------
 

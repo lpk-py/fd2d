@@ -2,7 +2,7 @@ if (mod(n,4)==0)
     
     %- plot velocity field ------------------------------------------------
     
-    pcolor(X,Z,v')
+    pcolor(X,Z,v');
     axis image
     hold on
     
@@ -19,7 +19,7 @@ if (mod(n,4)==0)
     if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation') || strcmp(simulation_mode,'correlation'))
     
         for k=1:n_receivers
-        plot(rec_x(k),rec_z(k),'ko')
+            plot(rec_x(k),rec_z(k),'ko')
         end
         
     end
@@ -32,7 +32,7 @@ if (mod(n,4)==0)
         scale=max(max(abs(v)));
     end
     
-    caxis([-scale scale])
+    caxis([-scale scale]);
     colormap(cm);
     shading interp
     xlabel('x [m]','FontSize',20);

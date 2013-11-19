@@ -11,9 +11,9 @@ function misfit=make_adjoint_sources(u,u_pert,t,rec_x,rec_z)
 % rec_x, rec_z: receiver positions in x- and z-directions
 %==========================================================================
 
-path(path,'helper_programmes/');
+path(path,'../propagation/');
 
-fid_loc=fopen('seismic_sources/adjoint/source_locations','w');
+fid_loc=fopen('../input/sources/adjoint/source_locations','w');
 
 nt=length(u(1,:));
 

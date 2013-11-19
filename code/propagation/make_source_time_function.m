@@ -4,9 +4,10 @@ if strcmp(simulation_mode,'forward_correlation')
     
     stf=1e9*ones(1,length(t));
     
-elseif strcmp(simulation_mode,'forward')
+else
     
-    stf=1e9*ones(1,length(t));
+    stf=zeros(1,length(t));
+    stf(1)=1e9;
     stf=butterworth_lp(stf,t,5,f_max,'silent');
     stf=butterworth_hp(stf,t,3,f_min,'silent');
     

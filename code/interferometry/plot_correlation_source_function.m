@@ -7,7 +7,7 @@ path(path,'../../input/interferometry');
 
 %- load the velocity spectrum field -----------------------------------
 
-load('../../output/G.mat');
+load('../../output/G_2.mat');
 
 %- read input and make space-time coordinates -----------------------------
 

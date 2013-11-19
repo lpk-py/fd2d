@@ -91,7 +91,7 @@ if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correla
         w_sample=2*pi*f_sample;
 
         %- Fourier transform of the forward Greens function
-        G=zeros(nx,nz,length(f_sample));
+        G_2=zeros(nx,nz,length(f_sample));
         
     end
     
@@ -108,7 +108,7 @@ elseif strcmp(simulation_mode,'correlation')
     input_interferometry;
     w_sample=2*pi*f_sample;
     %- load frequency-domain Greens function
-    load('../../output/G.mat');
+    load('../../output/G_2.mat');
     
     %- initialise noise spectrum
     make_noise_spectrum;
@@ -202,7 +202,7 @@ for n=1:length(t)
         S=zeros(nx,nz);
         
         for k=1:length(f_sample)
-            S=S+noise_spectrum(k)*conj(G(:,:,k))*exp(sqrt(-1)*w_sample(k)*t(n));
+            S=S+noise_spectrum(k)*conj(G_2(:,:,k))*exp(sqrt(-1)*w_sample(k)*t(n));
         end
         
         S=dw*S/(2*pi);
@@ -247,7 +247,7 @@ for n=1:length(t)
     if strcmp(simulation_mode,'forward_correlation')
     
         for k=1:length(w_sample)
-            G(:,:,k)=G(:,:,k)+v(:,:)*exp(-sqrt(-1)*w_sample(k)*t(n))*dt;
+            G_2(:,:,k)=G_2(:,:,k)+v(:,:)*exp(-sqrt(-1)*w_sample(k)*t(n))*dt;
         end
         
     end
@@ -269,7 +269,7 @@ save('../../output/v_forward','v_forward');
 %- store Fourier transformed velocity Greens function -----------------
 
 if strcmp(simulation_mode,'forward_correlation')
-    save('../../output/G','G');
+    save('../../output/G_2','G_2');
 end
 
 %- displacement seismograms -----------------------------------------------
@@ -283,5 +283,4 @@ if strcmp(make_movie,'yes')
     open(writerObj);
     writeVideo(writerObj,M);
     close(writerObj);
-    %movie2avi(M,'WaveMovie.avi');
 end

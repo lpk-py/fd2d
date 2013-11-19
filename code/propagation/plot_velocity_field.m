@@ -13,10 +13,15 @@ if (mod(n,4)==0)
         for k=1:ns
             plot(src_x(k),src_z(k),'kx')
         end
+        
     end
     
-    for k=1:n_receivers
+    if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation') || strcmp(simulation_mode,'correlation'))
+    
+        for k=1:n_receivers
         plot(rec_x(k),rec_z(k),'ko')
+        end
+        
     end
     
     hold off

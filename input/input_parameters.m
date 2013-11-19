@@ -38,18 +38,19 @@ model_type=1;
 % source-time function
 %==========================================================================
 
-f_min=10.0;     % minimum frequency [Hz]
-f_max=5000.0;    % maximum frequency [Hz]
+f_min=100.0;     % minimum frequency [Hz]
+f_max=500.0;    % maximum frequency [Hz]
 
 %==========================================================================
 % simulation mode
 %==========================================================================
 
-simulation_mode='correlation';
+simulation_mode='noise_source_kernel';
 
 % 'forward'                 regular forward simulation
 % 'forward_correlation'     forward simulation where Fourier transform is computed on-the-fly (preparation to compute correlation function)
 % 'correlation'             compute correlation functions as output, requires Fourier-transformed Green function to be present
+% 'noise_source_kernel'     compute sensitivity kernel for the noise source power-spectral density distribution
 
 %==========================================================================
 % receiver positions

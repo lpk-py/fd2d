@@ -20,13 +20,6 @@ nt=650;     % number of iterations
 order=4;    % finite-difference order (2 or 4)
 
 %==========================================================================
-% source-time function
-%==========================================================================
-
-f_min=10.0;     % minimum frequency [Hz]
-f_max=5000.0;    % maximum frequency [Hz]
-
-%==========================================================================
 % model type
 %==========================================================================
 
@@ -42,10 +35,17 @@ model_type=1;
 % 'initial'= read initial model for waveform inversion (mu_initial, rho_initial)
 
 %==========================================================================
+% source-time function
+%==========================================================================
+
+f_min=10.0;     % minimum frequency [Hz]
+f_max=5000.0;    % maximum frequency [Hz]
+
+%==========================================================================
 % simulation mode
 %==========================================================================
 
-simulation_mode='correlation';
+simulation_mode='forward_correlation';
 
 % 'forward'                 regular forward simulation
 % 'forward_correlation'     forward simulation where Fourier transform is computed on-the-fly (preparation to compute correlation function)
@@ -77,3 +77,10 @@ absorb_left=1;  % absorb waves on the left boundary
 absorb_right=1; % absorb waves on the right boundary
 absorb_top=1;   % absorb waves on the top boundary
 absorb_bottom=1;% absorb waves on the bottom boundary
+
+%==========================================================================
+% make wavepropagation movie
+%==========================================================================
+
+make_movie='yes';                   % 'yes' or 'no'
+movie_file='../../output/wavemovie.mp4';   % output file name 

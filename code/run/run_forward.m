@@ -253,6 +253,12 @@ for n=1:length(t)
     
     plot_velocity_field;
     
+    %- make movie ---------------------------------------------------------
+    
+    if strcmp(make_movie,'yes')
+        M(n)=getframe(gcf);
+    end
+    
 end
 
 %==========================================================================
@@ -272,3 +278,13 @@ end
 %- displacement seismograms -----------------------------------------------
 
 u=cumsum(velocity_seismograms,2)*dt;
+
+%- store the movie if wanted ----------------------------------------------
+
+if strcmp(make_movie,'yes')
+    writerObj=VideoWriter(movie_file,'MPEG-4');
+    open(writerObj);
+    writeVideo(writerObj,M);
+    close(writerObj);
+    %movie2avi(M,'WaveMovie.avi');
+end

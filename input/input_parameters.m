@@ -46,7 +46,7 @@ f_max=0.10;     % maximum frequency [Hz]
 % simulation mode
 %==========================================================================
 
-simulation_mode='correlation';
+simulation_mode='noise_korrelation_kernel';
 
 % 'forward'                 regular forward simulation
 % 'forward_correlation'     forward simulation where Fourier transform is computed on-the-fly (preparation to compute correlation function)
@@ -96,5 +96,5 @@ absorb_bottom=1;% absorb waves on the bottom boundary
 % make wavepropagation movie
 %==========================================================================
 
-make_movie='yes';                           % 'yes' or 'no'
-movie_file='../../output/cc_homogeneous_distribution.mp4';    % output file name, should be .mp4
+make_movie='no';                           % 'yes' or 'no'
+movie_file='../../output/cc_onesided_distribution.mp4';    % output file name, should be .mp4

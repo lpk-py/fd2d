@@ -4,7 +4,6 @@ if (mod(n,4)==0)
     
     hold on
     
-    for p=1:5 %- Here is a Matlab bug.
     if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation'))
         
         for k=1:ns
@@ -20,19 +19,20 @@ if (mod(n,4)==0)
         end
         
     end
-    end
+   
         
     %- plot velocity field ------------------------------------------------
-    
+   
     pcolor(X,Z,v');
+    set(gca,'FontSize',20);
     axis image
     
     %- scale, label, etc ... ----------------------------------------------
     
     if (n<0.8*length(t))
-        scale=max(max(max(abs(v))),4.0);
+        scale=max(max(abs(v)));
     end
-    
+   
     caxis([-scale scale]);
     colormap(cm);
     shading interp
@@ -50,6 +50,7 @@ if (mod(n,4)==0)
     pause(0.01)
     
     hold off
+    clf
     
     %- record movie -------------------------------------------------------
     

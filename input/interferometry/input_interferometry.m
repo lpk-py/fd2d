@@ -8,8 +8,10 @@
 %- on the positive time axis in the time-domain source function. This can 
 %- be checked with "plot_correlation_source_function".
 
-f_sample=-1000:10:1000;
-f_sample=f_sample/5000.0;
+%- It is sufficient to consider the positive frequency axis. The
+%- frequencies must start with 0.
+
+f_sample=0.000:0.002:0.200;
 
 %- characteristics of the noise spectrum ----------------------------------
 

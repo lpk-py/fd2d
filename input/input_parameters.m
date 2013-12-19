@@ -46,7 +46,7 @@ f_max=0.10;     % maximum frequency [Hz]
 % simulation mode
 %==========================================================================
 
-simulation_mode='noise_korrelation_kernel';
+simulation_mode='forward_correlation';
 
 % 'forward'                 regular forward simulation
 % 'forward_correlation'     forward simulation where Fourier transform is computed on-the-fly (preparation to compute correlation function)
@@ -69,17 +69,17 @@ rec_z=[500000.0];
 %rec_x=[50.0  50.0  50.0  50.0  50.0   50.0    70.0  90.0 110.0 130.0   70.0  90.0 110.0 130.0  150.0 150.0 150.0 150.0 150.0  150.0];
 %rec_z=[70.0  90.0 110.0 130.0 150.0  170.0    70.0  70.0  70.0  70.0  170.0 170.0 170.0 170.0   70.0  90.0 110.0 130.0 150.0  170.0];
 
-rec_x=zeros(1,49);
-rec_z=zeros(1,49);
-n=1;
+%rec_x=zeros(1,49);
+%rec_z=zeros(1,49);
+%n=1;
 
-for i=200e3:100e3:800e3
-    for j=200e3:100e3:800e3
-        rec_x(n)=i;
-        rec_z(n)=j;
-        n=n+1;
-    end
-end
+%for i=200e3:100e3:800e3
+%    for j=200e3:100e3:800e3
+%        rec_x(n)=i;
+%        rec_z(n)=j;
+%        n=n+1;
+%    end
+%end
 
 %==========================================================================
 % absorbing boundaries

@@ -38,11 +38,13 @@ stf=zeros(1,length(t));
 w_sample=2*pi*f_sample;
 dw=w_sample(2)-w_sample(1);
 
-for k=1:length(f_sample)
-    stf=stf+s(k)*exp(sqrt(-1)*w_sample(k)*t);
+i=sqrt(-1);
+for k=2:length(f_sample)
+    stf=stf+s(k)*exp(i*w_sample(k)*t);
 end
 
-stf=dw*stf/(2*pi);
+stf=stf+s(1)/2.0;
+stf=real(dw*stf/pi);
 
 %- plot results -----------------------------------------------------------
 

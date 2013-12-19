@@ -241,12 +241,13 @@ for n=1:length(t)
         
     end
     
-    %- accumulate Fourier transform of the velocity field -----------------
+    %- accumulate Fourier transform of the displacement field -------------
     
     if strcmp(simulation_mode,'forward_correlation')
     
         for k=1:length(w_sample)
-            G_2(:,:,k)=G_2(:,:,k)+v(:,:)*exp(-sqrt(-1)*w_sample(k)*t(n))*dt;
+            i=sqrt(-1);
+            G_2(:,:,k)=G_2(:,:,k)+v(:,:)*exp(-i*w_sample(k)*t(n))*dt;
         end
         
     end

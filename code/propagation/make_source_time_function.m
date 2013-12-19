@@ -2,7 +2,13 @@
 
 if strcmp(simulation_mode,'forward_correlation')
     
-    stf=1e9*ones(1,length(t));
+    %- To compute the Fourier transform of the Greens function, we need
+    %- a Heaviside function here. This is because the code computes the
+    %- velocity field Greens function and not the displacement field
+    %- Greens function. So, we integrate by integrating the source time
+    %- function.
+    
+    stf=1.0e9*ones(1,length(t));
     
 else
     

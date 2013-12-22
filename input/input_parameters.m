@@ -46,12 +46,19 @@ f_max=0.10;     % maximum frequency [Hz]
 % simulation mode
 %==========================================================================
 
-simulation_mode='forward_correlation';
+simulation_mode='correlation';
 
 % 'forward'                 regular forward simulation
-% 'forward_correlation'     forward simulation where Fourier transform is computed on-the-fly (preparation to compute correlation function)
+% 'forward_green'           forward simulation where Fourier transform of the Greens function is computed on-the-fly (preparation to compute correlation function)
 % 'correlation'             compute correlation functions as output, requires Fourier-transformed Green function to be present
 % 'noise_source_kernel'     compute sensitivity kernel for the noise source power-spectral density distribution
+
+%==========================================================================
+% source positions
+%==========================================================================
+
+src_x=[250000.0];
+src_z=[500000.0];
 
 %==========================================================================
 % receiver positions
@@ -96,5 +103,5 @@ absorb_bottom=1;% absorb waves on the bottom boundary
 % make wavepropagation movie
 %==========================================================================
 
-make_movie='no';                           % 'yes' or 'no'
-movie_file='../../output/cc_onesided_distribution.mp4';    % output file name, should be .mp4
+make_movie='no';                                            % 'yes' or 'no'
+movie_file='../../output/cc_onesided_distribution.mp4';     % output file name, should be .mp4

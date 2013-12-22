@@ -12,8 +12,10 @@ function misfit=make_adjoint_sources(u,u_pert,t,rec_x,rec_z)
 %==========================================================================
 
 path(path,'../propagation/');
+path(path,'../../input/');
 
-fid_loc=fopen('../input/sources/adjoint/source_locations','w');
+input_parameters;
+fid_loc=fopen([adjoint_source_path 'source_locations'],'w');
 
 nt=length(u(1,:));
 
@@ -59,10 +61,13 @@ for n=1:length(rec_x)
     fprintf(fid_loc,'%g %g\n',rec_x(n),rec_z(n));
     
     %- write source time functions ------------------------------------
-    fn=['seismic_sources/adjoint/src_' num2str(n)];
+    fn=[adjoint_source_path 'src_' num2str(n)];
     fid_src=fopen(fn,'w');
     for k=1:nt
         fprintf(fid_src,'%g\n',adstf(nt+1-k));
     end
+    fclose(fid_src);
       
 end
+
+fclose(fid_loc);

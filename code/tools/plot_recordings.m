@@ -9,11 +9,6 @@ function plot_recordings(u,t)
 path(path,'../../input/');
 input_parameters;
 
-fid=fopen([source_path 'source_locations'],'r');
-src_x=fscanf(fid,'%g',1);
-src_z=fscanf(fid,'%g',1);
-fclose(fid);
-
 %- make distance vector and sort ------------------------------------------
 
 d=sqrt((rec_x-src_x).^2+(rec_z-src_z).^2);

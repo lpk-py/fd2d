@@ -38,29 +38,13 @@ load cm_velocity;
  
 plot_model;
 
-%- forward simulations ('forward', 'forward_correlation') -----------------
+%- forward simulations ('forward', 'forward_green') -----------------------
 
-if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation'))
+if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_green'))
 
     %- time axis ----------------------------------------------------------
     
     t=0:dt:dt*(nt-1);
-    
-    %- read seismic source locations --------------------------------------
-
-    fid=fopen([source_path 'source_locations'],'r');
-    src_x=zeros(1);
-    src_z=zeros(1);
-
-    k=1;
-    while (feof(fid)==0)
-        src_x(k)=fscanf(fid,'%g',1);
-        src_z(k)=fscanf(fid,'%g',1);
-        fgetl(fid);
-        k=k+1;
-    end
-
-    fclose(fid);
     
     %- compute indices for source locations -------------------------------
 
@@ -85,7 +69,7 @@ if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correla
     
     %- initialise interferometry ------------------------------------------
     
-    if strcmp(simulation_mode,'forward_correlation')
+    if strcmp(simulation_mode,'forward_green')
     
         input_interferometry;
         w_sample=2*pi*f_sample;
@@ -100,13 +84,15 @@ if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correla
 elseif strcmp(simulation_mode,'correlation')
 
     %- time axis ----------------------------------------------------------
-    
     t=-(nt-1)*dt:dt:(nt-1)*dt;
     
     %- initialise interferometry ------------------------------------------
-    
     input_interferometry;
     w_sample=2*pi*f_sample;
+    
+    %- Fourier transform of the correlation velocity field
+    C_2=zeros(nx,nz,length(f_sample));
+        
     %- load frequency-domain Greens function
     load('../../output/G_2.mat');
     
@@ -152,22 +138,7 @@ velocity_seismograms=zeros(n_receivers,nt);
 
 %- initialise absorbing boundary taper a la Cerjan ------------------------
 
-%- left boundary
-if (absorb_left==1)
-    absbound=absbound.*(double([X'>width])+exp(-(X'-width).^2/(2*width)^2).*double([X'<=width]));
-end
-%- right boundary
-if (absorb_right==1)
-    absbound=absbound.*(double([X'<(Lx-width)])+exp(-(X'-(Lx-width)).^2/(2*width)^2).*double([X'>=(Lx-width)]));
-end
-%- bottom boundary
-if (absorb_bottom==1)
-    absbound=absbound.*(double([Z'>width])+exp(-(Z'-width).^2/(2*width)^2).*double([Z'<=width]));
-end
-%- top boundary
-if (absorb_top==1)
-    absbound=absbound.*(double([Z'<(Lz-width)])+exp(-(Z'-(Lz-width)).^2/(2*width)^2).*double([Z'>=(Lz-width)]));
-end
+init_absbound;
 
 %==========================================================================
 % iterate
@@ -183,7 +154,7 @@ for n=1:length(t)
     
     %- add point sources --------------------------------------------------
     
-    if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation'))
+    if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_green'))
     
         for i=1:ns
             DS(src_x_id(i),src_z_id(i))=DS(src_x_id(i),src_z_id(i))+stf(n);
@@ -200,11 +171,13 @@ for n=1:length(t)
         dw=w_sample(2)-w_sample(1);
         S=zeros(nx,nz);
         
-        for k=1:length(f_sample)
-            S=S+noise_spectrum(k)*conj(G_2(:,:,k))*exp(sqrt(-1)*w_sample(k)*t(n));
+        i=sqrt(-1);
+        for k=2:length(f_sample)
+            S=S+noise_spectrum(k)*conj(G_2(:,:,k))*exp(i*w_sample(k)*t(n));
         end
+        S=S+noise_spectrum(1)*conj(G_2(:,:,1))/2.0;
         
-        S=dw*S/(2*pi);
+        S=real(dw*S/pi);
         
         %- add sources
         
@@ -241,13 +214,24 @@ for n=1:length(t)
         
     end
     
-    %- accumulate Fourier transform of the displacement field -------------
+    %- accumulate Fourier transform of the displacement Greens function ---
     
-    if strcmp(simulation_mode,'forward_correlation')
+    if strcmp(simulation_mode,'forward_green')
     
         for k=1:length(w_sample)
             i=sqrt(-1);
             G_2(:,:,k)=G_2(:,:,k)+v(:,:)*exp(-i*w_sample(k)*t(n))*dt;
+        end
+        
+    end
+    
+    %- accumulate Fourier transform of the correlation velocity field -----
+    
+    if strcmp(simulation_mode,'correlation')
+    
+        for k=1:length(w_sample)
+            i=sqrt(-1);
+            C_2(:,:,k)=C_2(:,:,k)+v(:,:)*exp(-i*w_sample(k)*t(n))*dt;
         end
         
     end
@@ -268,10 +252,16 @@ if strcmp(simulation_mode,'forward')
     save('../../output/v_forward','v_forward');
 end
 
-%- store Fourier transformed velocity Greens function -----------------
+%- store Fourier transformed velocity Greens function ---------------------
 
-if strcmp(simulation_mode,'forward_correlation')
+if strcmp(simulation_mode,'forward_green')
     save('../../output/G_2','G_2');
+end
+
+%- store Fourier transformed correlation velocity field -------------------
+
+if strcmp(simulation_mode,'correlation')
+    save('../../output/C_2','C_2');
 end
 
 %- displacement seismograms -----------------------------------------------

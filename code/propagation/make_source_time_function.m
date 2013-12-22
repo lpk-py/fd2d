@@ -1,6 +1,6 @@
 %- compute source-time function -------------------------------------------
 
-if strcmp(simulation_mode,'forward_correlation')
+if strcmp(simulation_mode,'forward_green')
     
     %- To compute the Fourier transform of the Greens function, we need
     %- a Heaviside function here. This is because the code computes the

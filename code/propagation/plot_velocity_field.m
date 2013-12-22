@@ -1,31 +1,22 @@
 if (mod(n,4)==0)
-    
+       
     %- plot source and receiver positions ---------------------------------
     
     hold on
     
-    if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation'))
-        
-        for k=1:ns
-            plot(src_x(k),src_z(k),'kx')
-        end
-        
+    for k=1:length(src_x)
+        plot(src_x(k),src_z(k),'kx')
     end
     
-    if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_correlation') || strcmp(simulation_mode,'correlation'))
-    
-        for k=1:n_receivers
-            plot(rec_x(k),rec_z(k),'ko')
-        end
-        
+    for k=1:length(rec_x)
+        plot(rec_x(k),rec_z(k),'ko')
     end
    
-        
     %- plot velocity field ------------------------------------------------
    
     pcolor(X,Z,v');
     set(gca,'FontSize',20);
-    axis image
+    axis equal %image
     
     %- scale, label, etc ... ----------------------------------------------
     
@@ -46,7 +37,7 @@ if (mod(n,4)==0)
     elseif (strcmp(simulation_mode,'correlation') && t(n)>=0)
         title('causal correlation field','FontSize',20);
     end
-        
+       
     pause(0.01)
     
     hold off

@@ -16,10 +16,9 @@ function [u,t,rec_x,rec_z]=run_forward
 % set paths and read input
 %==========================================================================
 
-path(path,'../propagation/');
-path(path,'../interferometry/');
-path(path,'../../input/');
-path(path,'../../input/interferometry');
+path(path,'propagation/');
+path(path,'../input/');
+path(path,'../input/interferometry');
 
 input_parameters;
 nt=5*round(nt/5);
@@ -94,7 +93,7 @@ elseif strcmp(simulation_mode,'correlation')
     C_2=zeros(nx,nz,length(f_sample));
         
     %- load frequency-domain Greens function
-    load('../../output/G_2.mat');
+    load('../output/interferometry/G_2.mat');
     
     %- initialise noise spectrum
     make_noise_spectrum;
@@ -255,13 +254,13 @@ end
 %- store Fourier transformed velocity Greens function ---------------------
 
 if strcmp(simulation_mode,'forward_green')
-    save('../../output/G_2','G_2');
+    save('../output/interferometry/G_2','G_2');
 end
 
 %- store Fourier transformed correlation velocity field -------------------
 
 if strcmp(simulation_mode,'correlation')
-    save('../../output/C_2','C_2');
+    save('../output/interferometry/C_2','C_2');
 end
 
 %- displacement seismograms -----------------------------------------------

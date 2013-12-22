@@ -2,8 +2,7 @@
 % path where seismic sources are located
 %==========================================================================
 
-source_path='../../input/sources/forward/';
-adjoint_source_path='../../input/sources/adjoint/';
+adjoint_source_path='../input/sources/adjoint/';
 
 %==========================================================================
 % set basic simulation parameters

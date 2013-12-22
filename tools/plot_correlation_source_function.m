@@ -58,7 +58,7 @@ plot(f_sample,abs(s),'k');
 xlabel('\nu [Hz]','FontSize',20)
 ylabel('amplitude spectrum','FontSize',20)
 
-title(['velocity spectrum at position x=' num2str(x(x_id)) ' m, z=' num2str(z(z_id)) ' m'],'FontSize',20)
+title(['displacement spectrum at position x=' num2str(x(x_id)) ' m, z=' num2str(z(z_id)) ' m'],'FontSize',20)
 
 subplot(2,1,2)
 plot(f_sample,angle(s),'k');

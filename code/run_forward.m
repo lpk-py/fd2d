@@ -174,7 +174,7 @@ for n=1:length(t)
         for k=2:length(f_sample)
             S=S+noise_spectrum(k)*conj(G_2(:,:,k))*exp(i*w_sample(k)*t(n));
         end
-        S=S+noise_spectrum(1)*conj(G_2(:,:,1))/2.0;
+        %S=S+noise_spectrum(1)*conj(G_2(:,:,1))/2.0;
         
         S=real(dw*S/pi);
         

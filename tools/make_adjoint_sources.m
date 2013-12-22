@@ -1,4 +1,4 @@
-function misfit=make_adjoint_sources(u,u_pert,t,rec_x,rec_z)
+function misfit=make_adjoint_sources(u,u_pert,t)
 
 %==========================================================================
 % compute and store adjoint sources
@@ -11,17 +11,22 @@ function misfit=make_adjoint_sources(u,u_pert,t,rec_x,rec_z)
 % rec_x, rec_z: receiver positions in x- and z-directions
 %==========================================================================
 
-path(path,'../propagation/');
-path(path,'../../input/');
+%==========================================================================
+%- initialisations --------------------------------------------------------
+%==========================================================================
 
+path(path,'../input/');
 input_parameters;
+
 fid_loc=fopen([adjoint_source_path 'source_locations'],'w');
 
-nt=length(u(1,:));
+nt=length(t);
 
 misfit=0.0;
 
+%==========================================================================
 %- march through the various recodings ------------------------------------
+%==========================================================================
 
 for n=1:length(rec_x)
    
@@ -69,5 +74,9 @@ for n=1:length(rec_x)
     fclose(fid_src);
       
 end
+
+%==========================================================================
+%- clean up ---------------------------------------------------------------
+%==========================================================================
 
 fclose(fid_loc);

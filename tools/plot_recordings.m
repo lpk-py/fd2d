@@ -1,4 +1,10 @@
-function plot_recordings(u,t)
+% function plot_recordings(u,t,mode)
+%
+% u: displacement recordings
+% t: time axis
+% mode: 'dis' for displacement, 'vel' for velocity
+
+function plot_recordings(u,t,mode)
 
 %==========================================================================
 %- plot recordings, ordered according to distance from the first source ---
@@ -6,13 +12,28 @@ function plot_recordings(u,t)
 
 %- read input -------------------------------------------------------------
 
-path(path,'../../input/');
+path(path,'../input/');
 input_parameters;
 
 %- make distance vector and sort ------------------------------------------
 
 d=sqrt((rec_x-src_x).^2+(rec_z-src_z).^2);
 [dummy,idx]=sort(d);
+
+%- convert to velocity if wanted ------------------------------------------
+
+if strcmp(mode,'vel')
+    nt=length(t);
+    v=zeros(length(rec_x),nt-1);
+    
+    for k=1:length(rec_x)
+        v(k,:)=diff(u(k,:))/(t(2)-t(1));
+    end
+    
+    t=t(1:nt-1);
+    u=v;
+    
+end
 
 %- plot recordings with ascending distance from the first source ----------
 

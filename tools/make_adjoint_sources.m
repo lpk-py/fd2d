@@ -1,17 +1,22 @@
 %==========================================================================
 % compute and store adjoint sources
 %
-% function misfit=make_adjoint_sources(u,u_pert,t,mode)
+% function misfit=make_adjoint_sources(u,u_0,t,mode)
 %
 % input:
 %-------
 % u: synthetic displacement seismograms
 % u_0: observed displacement seismograms
 % t: time axis
-% mode: 'dis' for displacements, 'vel' for velocities
+% veldis: 'dis' for displacements, 'vel' for velocities
+% measurement:  'waveform_difference' for L2 waveform difference
+%
+% When u_0, i.e. the observed displacement seismograms, are set to zero, 
+% the code performs data-independent measurements. 
+% 
 %==========================================================================
 
-function misfit=make_adjoint_sources(u,u_0,t,mode)
+function misfit=make_adjoint_sources(u,u_0,t,veldis,measurement)
 
 %==========================================================================
 %- initialisations --------------------------------------------------------
@@ -30,7 +35,7 @@ misfit=0.0;
 
 %- convert to velocity if wanted ------------------------------------------
 
-if strcmp(mode,'vel')
+if strcmp(veldis,'vel')
     nt=length(t);
     v=zeros(length(rec_x),nt);
     
@@ -75,7 +80,10 @@ for n=1:length(rec_x)
     
     %- compute misfit and adjoint source time function --------------------
     
-    [misfit_n,adstf]=waveform_difference(u(n,:),u_0(n,:),t);
+    if strcmp(measurement,'waveform_difference')
+        [misfit_n,adstf]=waveform_difference(u(n,:),u_0(n,:),t);
+    end
+    
     misfit=misfit+misfit_n;
     
     %- plot adjoint source before time reversal ---------------------------

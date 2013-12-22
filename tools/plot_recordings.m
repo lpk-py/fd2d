@@ -4,7 +4,7 @@
 % t: time axis
 % mode: 'dis' for displacement, 'vel' for velocity
 
-function plot_recordings(u,t,mode)
+function plot_recordings(u,t,veldis)
 
 %==========================================================================
 %- plot recordings, ordered according to distance from the first source ---
@@ -22,7 +22,7 @@ d=sqrt((rec_x-src_x).^2+(rec_z-src_z).^2);
 
 %- convert to velocity if wanted ------------------------------------------
 
-if strcmp(mode,'vel')
+if strcmp(veldis,'vel')
     nt=length(t);
     v=zeros(length(rec_x),nt-1);
     

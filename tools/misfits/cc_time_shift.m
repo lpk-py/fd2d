@@ -15,7 +15,7 @@ path(path,'tf/');
 %- compute time shift -----------------------------------------------------
 
 if sum(u_0==0)==length(t)
-    T==1.0;
+    T=1.0;
 else
     [cc,t_cc]=cross_correlation(u_0,u,t);
     T=t_cc(find(max(cc)==cc));

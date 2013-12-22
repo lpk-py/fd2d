@@ -10,6 +10,7 @@
 % t: time axis
 % veldis: 'dis' for displacements, 'vel' for velocities
 % measurement:  'waveform_difference' for L2 waveform difference
+%               'cc_time_shift' for cross-correlation time shift
 %
 % When u_0, i.e. the observed displacement seismograms, are set to zero, 
 % the code performs data-independent measurements. 
@@ -30,13 +31,14 @@ input_parameters;
 fid_loc=fopen([adjoint_source_path 'source_locations'],'w');
 
 nt=length(t);
+dt=t(2)-t(1);
 
 misfit=0.0;
 
 %- convert to velocity if wanted ------------------------------------------
 
 if strcmp(veldis,'vel')
-    nt=length(t);
+    
     v=zeros(length(rec_x),nt);
     
     for k=1:length(rec_x)
@@ -82,9 +84,17 @@ for n=1:length(rec_x)
     
     if strcmp(measurement,'waveform_difference')
         [misfit_n,adstf]=waveform_difference(u(n,:),u_0(n,:),t);
+    elseif strcmp(measurement,'cc_time_shift')
+        [misfit_n,adstf]=cc_time_shift(u(n,:),u_0(n,:),t);
     end
     
     misfit=misfit+misfit_n;
+    
+    %- correct adjoint source time function for velocity measurement ------
+    
+    if strcmp(veldis,'vel')
+        adstf(1:nt-1)=-diff(adstf)/dt;
+    end
     
     %- plot adjoint source before time reversal ---------------------------
    

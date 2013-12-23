@@ -2,12 +2,12 @@ function plot_correlation_source_function(x_plot,z_plot)
 
 %- set paths --------------------------------------------------------------
 
-path(path,'../../input/');
-path(path,'../../input/interferometry');
+path(path,'../input/');
+path(path,'../input/interferometry');
 
 %- load the velocity spectrum field -----------------------------------
 
-load('../../output/G_2.mat');
+load('../output/interferometry/G_2.mat');
 
 %- read input and make space-time coordinates -----------------------------
 

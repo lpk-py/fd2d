@@ -77,8 +77,9 @@ for n=1:length(rec_x)
     disp('select_right_window');
     [right,dummy]=ginput(1);
     
-    u(n,:)=taper(u(n,:),t,left,right,(right-left)/10);
-    u_0(n,:)=taper(u_0(n,:),t,left,right,(right-left)/10);
+    width=t(end)/10;
+    u(n,:)=taper(u(n,:),t,left,right,width);
+    u_0(n,:)=taper(u_0(n,:),t,left,right,width);
     
     %- compute misfit and adjoint source time function --------------------
     
@@ -103,15 +104,16 @@ for n=1:length(rec_x)
     title('adjoint source before time reversal')
     pause(1.0)
    
-    %- write time-reversed adjoint source to file -------------------------
+    %- write adjoint source to file ---------------------------------------
    
     fprintf(fid_loc,'%g %g\n',rec_x(n),rec_z(n));
     
-    %- write source time functions ------------------------------------
+    %- write source time functions ----------------------------------------
+    
     fn=[adjoint_source_path 'src_' num2str(n)];
     fid_src=fopen(fn,'w');
     for k=1:nt
-        fprintf(fid_src,'%g\n',adstf(nt+1-k));
+        fprintf(fid_src,'%g\n',adstf(k));
     end
     fclose(fid_src);
       

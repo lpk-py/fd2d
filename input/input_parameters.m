@@ -15,7 +15,7 @@ nx=200;     % grid points in x-direction
 nz=200;     % grid points in z-direction
 
 dt=0.5;     % time step [s]
-nt=400;     % number of iterations
+nt=800;     % number of iterations
 
 order=4;    % finite-difference order (2 or 4)
 
@@ -56,7 +56,7 @@ simulation_mode='correlation';
 % source positions
 %==========================================================================
 
-src_x=[250000.0];
+src_x=[300000.0];
 src_z=[500000.0];
 
 %==========================================================================
@@ -68,7 +68,7 @@ src_z=[500000.0];
 %rec_z=[70.0 80.0 90.0 100.0 110.0 120.0 130.0 140.0 150.0 160.0 170.0 180.0 70.0 70.0 70.0 70.0 70.0  70.0  70.0  70.0  180.0 180.0 180.0 180.0 180.0 180.0 180.0 180.0];
 
 %- just one receiver
-rec_x=[750000.0];
+rec_x=[700000.0];
 rec_z=[500000.0];
 
 %- a large number of receivers in a closed rectangular configuration

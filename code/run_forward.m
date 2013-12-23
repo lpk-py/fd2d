@@ -174,7 +174,7 @@ for n=1:length(t)
         for k=2:length(f_sample)
             S=S+noise_spectrum(k)*conj(G_2(:,:,k))*exp(i*w_sample(k)*t(n));
         end
-        %S=S+noise_spectrum(1)*conj(G_2(:,:,1))/2.0;
+        S=S+noise_spectrum(1)*conj(G_2(:,:,1))/2.0;
         
         S=real(dw*S/pi);
         
@@ -217,8 +217,8 @@ for n=1:length(t)
     
     if strcmp(simulation_mode,'forward_green')
     
+        i=sqrt(-1);
         for k=1:length(w_sample)
-            i=sqrt(-1);
             G_2(:,:,k)=G_2(:,:,k)+v(:,:)*exp(-i*w_sample(k)*t(n))*dt;
         end
         
@@ -228,8 +228,8 @@ for n=1:length(t)
     
     if strcmp(simulation_mode,'correlation')
     
+        i=sqrt(-1);
         for k=1:length(w_sample)
-            i=sqrt(-1);
             C_2(:,:,k)=C_2(:,:,k)+v(:,:)*exp(-i*w_sample(k)*t(n))*dt;
         end
         

@@ -6,8 +6,7 @@ function plot_noise_source_kernels(X,Z,K_s)
 
 %- initialisations --------------------------------------------------------
 
-path(path,'../../input/');
-path(path,'../../input/interferometry');
+path(path,'../input/');
 load cm_velocity;
 
 input_parameters;

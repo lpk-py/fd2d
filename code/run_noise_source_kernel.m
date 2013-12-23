@@ -1,4 +1,4 @@
-function [X,Z,K_s,K_rho]=run_noise_source_kernel
+function [X,Z,K_s]=run_noise_source_kernel
 
 %==========================================================================
 % run simulation to compute sensitivity kernel for noise power-spectral
@@ -7,7 +7,7 @@ function [X,Z,K_s,K_rho]=run_noise_source_kernel
 % output:
 %--------
 % X, Z: coordinate axes
-% K: sensitivity kernel
+% K_s: sensitivity kernel
 %
 %==========================================================================
 
@@ -15,10 +15,9 @@ function [X,Z,K_s,K_rho]=run_noise_source_kernel
 % set paths and read input
 %==========================================================================
 
-path(path,'../propagation/');
-path(path,'../interferometry/');
-path(path,'../../input/');
-path(path,'../../input/interferometry');
+path(path,'propagation/');
+path(path,'../input/');
+path(path,'../input/interferometry');
 
 input_parameters;
 
@@ -56,8 +55,7 @@ end
 
 fclose(fid);
 
-%- read adjoint source time functions and bring them back to the regular --
-%- time axis --------------------------------------------------------------
+%- read adjoint source time functions -------------------------------------
 
 nt=length(t);
 ns=length(adsrc_x);
@@ -65,7 +63,7 @@ stf=zeros(ns,nt);
 
 for n=1:ns
     fid=fopen([adjoint_source_path '/src_' num2str(n)],'r');
-    stf(n,nt:-1:1)=fscanf(fid,'%g',nt);
+    stf(n,1:nt)=fscanf(fid,'%g',nt);
 end
     
 %- compute indices for adjoint source locations ---------------------------
@@ -91,8 +89,6 @@ dw=w_sample(2)-w_sample(1);
 
 G_1=zeros(nx,nz,length(f_sample));
 K_s=zeros(nx,nz,length(f_sample));
-
-K_rho=zeros(nx,nz);
              
 %- dynamic fields and absorbing boundary field ----------------------------
 
@@ -156,29 +152,15 @@ end
 %==========================================================================
 
 %- load Fourier transformed Greens function from forward simulation
-load('../../output/G_2.mat');
+load('../output/interferometry/G_2.mat');
 
 %- multiply Fourier transformed Greens functions
 i=sqrt(-1);
 for k=1:length(w_sample)
-    K_s(:,:,k)=K_s(:,:,k)+G_1(:,:,k).*conj(G_2(:,:,k))*dw/(i*w_sample(k)+eps);
+    K_s(:,:,k)=G_1(:,:,k).*conj(G_2(:,:,k))/(i*w_sample(k)+eps);
 end
 
 K_s=real(K_s);
-
-%==========================================================================
-% compute structure kernels 
-%==========================================================================
-
-%- load Fourier transformed correlation velocity field
-load('../../output/C_2.mat');
-
-%- accumulate kernel by looping over frequency
-for k=1:length(w_sample)
-    K_rho=K_rho+conj(G_1(:,:,k)).*C_2(:,:,k)*dw;
-end
-
-K_rho=real(K_rho);
 
 %==========================================================================
 % output 

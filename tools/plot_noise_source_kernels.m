@@ -15,9 +15,11 @@ input_interferometry;
 %- decide on a frequency --------------------------------------------------
 
 fprintf(1,'f_min=%g Hz, f_max=%g Hz, df=%g Hz\n',min(f_sample),max(f_sample),f_sample(2)-f_sample(1));
-f=input('frequency in Hz: ');
+f_min=input('min frequency in Hz: ');
+f_max=input('max frequency in Hz: ');
 
-ind_f=find(min(abs(f-f_sample))==abs(f-f_sample));
+ind_f_min=find(min(abs(f_min-f_sample))==abs(f_min-f_sample));
+ind_f_max=find(min(abs(f_max-f_sample))==abs(f_max-f_sample));
 
 %- plot source and receiver positions -------------------------------------
 
@@ -34,7 +36,9 @@ end
        
 %- plot noise source kernel -----------------------------------------------
 
-pcolor(X,Z,K_s(:,:,ind_f)');
+K_sum=sum(K_s(:,:,ind_f_min:ind_f_max),3);
+
+pcolor(X,Z,K_sum');
 set(gca,'FontSize',20);
 axis equal
 
@@ -44,7 +48,7 @@ colormap(cm);
 shading interp
 colorbar
 
-m=max(max(abs(K_s(:,:,ind_f))));
+m=max(max(K_sum));
 caxis([-m m]);
 
 xlabel('x [m]','FontSize',20);

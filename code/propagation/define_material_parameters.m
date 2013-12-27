@@ -67,6 +67,13 @@ elseif (model_type==6)
     
     rho(98:102,123:127)=rho(98:102,123:127)+2000.0;
     
+elseif (model_type==100)
+    
+    rho=3000.0*ones(nx,nz);
+    mu=ones(nx,nz);
+    mu(1:200,:)=3.675e10;
+    mu(201:400,:)=2.7e10;
+    
 else
     
     load(['models/mu_' model_type]);

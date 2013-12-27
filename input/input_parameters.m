@@ -8,11 +8,11 @@ adjoint_source_path='../input/sources/adjoint/';
 % set basic simulation parameters
 %==========================================================================
 
-Lx=1e6;     % model extension in x-direction [m]
-Lz=1e6;     % model extension in y-direction [m]
+Lx=2e6;     % model extension in x-direction [m]
+Lz=2e6;     % model extension in y-direction [m]
 
-nx=200;     % grid points in x-direction
-nz=200;     % grid points in z-direction
+nx=400;     % grid points in x-direction
+nz=400;     % grid points in z-direction
 
 dt=0.5;     % time step [s]
 nt=800;     % number of iterations
@@ -23,7 +23,7 @@ order=4;    % finite-difference order (2 or 4)
 % model type
 %==========================================================================
 
-model_type=1;
+model_type=100;
 
 % 1=homogeneous 
 % 2=homogeneous with localised density perturbation
@@ -56,8 +56,8 @@ simulation_mode='correlation';
 % source positions
 %==========================================================================
 
-src_x=[300000.0];
-src_z=[500000.0];
+src_x=[1100000.0];
+src_z=[700000.0];
 
 %==========================================================================
 % receiver positions
@@ -68,24 +68,22 @@ src_z=[500000.0];
 %rec_z=[70.0 80.0 90.0 100.0 110.0 120.0 130.0 140.0 150.0 160.0 170.0 180.0 70.0 70.0 70.0 70.0 70.0  70.0  70.0  70.0  180.0 180.0 180.0 180.0 180.0 180.0 180.0 180.0];
 
 %- just one receiver
-rec_x=[700000.0];
-rec_z=[500000.0];
+%rec_x=[700000.0];
+%rec_z=[500000.0];
 
 %- a large number of receivers in a closed rectangular configuration
 %rec_x=[50.0  50.0  50.0  50.0  50.0   50.0    70.0  90.0 110.0 130.0   70.0  90.0 110.0 130.0  150.0 150.0 150.0 150.0 150.0  150.0];
 %rec_z=[70.0  90.0 110.0 130.0 150.0  170.0    70.0  70.0  70.0  70.0  170.0 170.0 170.0 170.0   70.0  90.0 110.0 130.0 150.0  170.0];
 
-%rec_x=zeros(1,49);
-%rec_z=zeros(1,49);
-%n=1;
+rec_x=zeros(1,6);
+rec_z=zeros(1,6);
+n=1;
 
-%for i=200e3:100e3:800e3
-%    for j=200e3:100e3:800e3
-%        rec_x(n)=i;
-%        rec_z(n)=j;
-%        n=n+1;
-%    end
-%end
+for phi=0:pi/10:pi/2
+    rec_x(n)=src_x(1)+5e5*cos(phi);
+    rec_z(n)=src_z(1)+5e5*sin(phi);
+    n=n+1;
+end
 
 %==========================================================================
 % absorbing boundaries
@@ -103,4 +101,4 @@ absorb_bottom=1;% absorb waves on the bottom boundary
 %==========================================================================
 
 make_movie='no';                                            % 'yes' or 'no'
-movie_file='../../output/cc_onesided_distribution.mp4';     % output file name, should be .mp4
+movie_file='../output/testmovie.mp4';     % output file name, should be .mp4

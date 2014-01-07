@@ -11,7 +11,7 @@
 %- It is sufficient to consider the positive frequency axis. The
 %- frequencies must start with 0.
 
-f_sample=0.000:0.002:0.300;
+f_sample=0.000:0.002:0.200;
 
 %- characteristics of the noise spectrum ----------------------------------
 

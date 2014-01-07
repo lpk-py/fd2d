@@ -71,8 +71,8 @@ elseif (model_type==100)
     
     rho=3000.0*ones(nx,nz);
     mu=ones(nx,nz);
-    mu(1:200,:)=3.675e10;
-    mu(201:400,:)=2.7e10;
+    mu(1:330,:)=3.675e10;
+    mu(331:end,:)=2.7e10;
     
 else
     

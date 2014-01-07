@@ -8,14 +8,14 @@ adjoint_source_path='../input/sources/adjoint/';
 % set basic simulation parameters
 %==========================================================================
 
-Lx=2e6;     % model extension in x-direction [m]
-Lz=2e6;     % model extension in y-direction [m]
+Lx=2.5e6;     % model extension in x-direction [m]
+Lz=2.0e6;     % model extension in y-direction [m]
 
-nx=400;     % grid points in x-direction
-nz=400;     % grid points in z-direction
+nx=750;     % grid points in x-direction
+nz=600;     % grid points in z-direction
 
-dt=0.5;     % time step [s]
-nt=800;     % number of iterations
+dt=0.33;     % time step [s]
+nt=1200;     % number of iterations
 
 order=4;    % finite-difference order (2 or 4)
 
@@ -80,8 +80,8 @@ rec_z=zeros(1,6);
 n=1;
 
 for phi=0:pi/10:pi/2
-    rec_x(n)=src_x(1)+5e5*cos(phi);
-    rec_z(n)=src_z(1)+5e5*sin(phi);
+    rec_x(n)=src_x(1)+6.5e5*cos(phi);
+    rec_z(n)=src_z(1)+6.5e5*sin(phi);
     n=n+1;
 end
 
@@ -89,7 +89,7 @@ end
 % absorbing boundaries
 %==========================================================================
 
-width=100000.0;     % width of the boundary layer in km
+width=150000.0;     % width of the boundary layer in km
 
 absorb_left=1;  % absorb waves on the left boundary
 absorb_right=1; % absorb waves on the right boundary
@@ -100,5 +100,5 @@ absorb_bottom=1;% absorb waves on the bottom boundary
 % make wavepropagation movie
 %==========================================================================
 
-make_movie='no';                                            % 'yes' or 'no'
-movie_file='../output/testmovie.mp4';     % output file name, should be .mp4
+make_movie='yes';                                            % 'yes' or 'no'
+movie_file='../output/G2.mp4';     % output file name, should be .mp4

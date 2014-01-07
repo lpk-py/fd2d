@@ -12,8 +12,3 @@
 %- frequencies must start with 0.
 
 f_sample=0.000:0.002:0.200;
-
-%- characteristics of the noise spectrum ----------------------------------
-
-f_peak=1.0/16.0;       % peak frequency in Hz
-bandwidth=0.35/16.0;    % bandwidth in Hz

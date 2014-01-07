@@ -95,11 +95,8 @@ elseif strcmp(simulation_mode,'correlation')
     %- load frequency-domain Greens function
     load('../output/interferometry/G_2.mat');
     
-    %- initialise noise spectrum
-    make_noise_spectrum;
-    
-    %- geographic distribution of noise sources
-    make_noise_source_geography;
+    %- initialise noise source locations and spectra
+    make_noise_source;
     
 end
  
@@ -168,20 +165,21 @@ for n=1:length(t)
         %- transform on the fly to the time domain
         
         dw=w_sample(2)-w_sample(1);
-        S=zeros(nx,nz);
+        S=zeros(nx,nz,n_noise_sources);
         
         i=sqrt(-1);
-        for k=2:length(f_sample)
-            S=S+noise_spectrum(k)*conj(G_2(:,:,k))*exp(i*w_sample(k)*t(n));
+        for ns=1:n_noise_sources
+            
+            %- inverse Fourier transform for each noise source region
+            for k=2:length(f_sample)
+                S(:,:,ns)=S(:,:,ns)+noise_spectrum(k,ns)*conj(G_2(:,:,k))*exp(i*w_sample(k)*t(n));
+            end
+            S(:,:,ns)=real(dw*S(:,:,ns)/pi);
+            
+            %- add sources
+            DS=DS+noise_source_distribution(:,:,ns).*real(S(:,:,ns));
         end
-        %S=S+noise_spectrum(1)*conj(G_2(:,:,1))/2.0;
-        
-        S=real(dw*S/pi);
-        
-        %- add sources
-        
-        DS=DS+noise_source_distribution.*real(S);
-          
+           
     end
     
     %- update velocity field ----------------------------------------------

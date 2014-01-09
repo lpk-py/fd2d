@@ -100,5 +100,5 @@ absorb_bottom=1;% absorb waves on the bottom boundary
 % make wavepropagation movie
 %==========================================================================
 
-make_movie='no';                                            % 'yes' or 'no'
-movie_file='../output/G2.mp4';     % output file name, should be .mp4
+make_movie='yes';                                            % 'yes' or 'no'
+movie_file='../output/C_2_heterogeneous.mp4';     % output file name, should be .mp4

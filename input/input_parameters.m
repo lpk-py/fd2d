@@ -79,7 +79,7 @@ rec_x=zeros(1,6);
 rec_z=zeros(1,6);
 n=1;
 
-for phi=0:pi/10:pi/2
+for phi=-pi/4:pi/10:pi/2
     rec_x(n)=src_x(1)+6.5e5*cos(phi);
     rec_z(n)=src_z(1)+6.5e5*sin(phi);
     n=n+1;
@@ -101,4 +101,4 @@ absorb_bottom=1;% absorb waves on the bottom boundary
 %==========================================================================
 
 make_movie='yes';                                            % 'yes' or 'no'
-movie_file='../output/C_2_heterogeneous.mp4';     % output file name, should be .mp4
+movie_file='../output/C_2_heterogeneous_whitened.mp4';     % output file name, should be .mp4

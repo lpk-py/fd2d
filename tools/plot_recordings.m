@@ -50,7 +50,7 @@ end
 
 %- plot recordings with ascending distance from the first source ----------
 
-figure
+%figure
 set(gca,'FontSize',20)
 hold on
 
@@ -58,9 +58,9 @@ for k=1:length(rec_x)
     
     m=max(abs(u(idx(k),:)));
     if mod(k,2)
-        plot(t,spacing*(k-1)+u(idx(k),:)/m,'k','LineWidth',1)
+        plot(t,spacing*(k-1)+u(idx(k),:)/m,'k.-','LineWidth',1)
     else
-        plot(t,spacing*(k-1)+u(idx(k),:)/m,'b','LineWidth',1)
+        plot(t,spacing*(k-1)+u(idx(k),:)/m,'b.-','LineWidth',1)
     end
     
     if (max(rec_x)<=1000)

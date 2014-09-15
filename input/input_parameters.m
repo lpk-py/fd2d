@@ -1,21 +1,15 @@
 %==========================================================================
-% path where seismic sources are located
-%==========================================================================
-
-adjoint_source_path='../input/sources/adjoint/';
-
-%==========================================================================
 % set basic simulation parameters
 %==========================================================================
 
 Lx=2.5e6;     % model extension in x-direction [m]
 Lz=2.0e6;     % model extension in y-direction [m]
 
-nx=750;     % grid points in x-direction
-nz=600;     % grid points in z-direction
+nx=400;     % grid points in x-direction
+nz=300;     % grid points in z-direction
 
-dt=0.33;     % time step [s]
-nt=1200;     % number of iterations
+dt=0.50;     % time step [s]
+nt=1000;     % number of iterations
 
 order=4;    % finite-difference order (2 or 4)
 
@@ -23,7 +17,7 @@ order=4;    % finite-difference order (2 or 4)
 % model type
 %==========================================================================
 
-model_type=100;
+model_type=1;
 
 % 1=homogeneous 
 % 2=homogeneous with localised density perturbation
@@ -39,13 +33,13 @@ model_type=100;
 %==========================================================================
 
 f_min=0.02;     % minimum frequency [Hz]
-f_max=0.10;     % maximum frequency [Hz]
+f_max=0.05;     % maximum frequency [Hz]
 
 %==========================================================================
 % simulation mode
 %==========================================================================
 
-simulation_mode='correlation';
+simulation_mode='forward';
 
 % 'forward'                 regular forward simulation
 % 'forward_green'           forward simulation where Fourier transform of the Greens function is computed on-the-fly (preparation to compute correlation function)
@@ -56,34 +50,16 @@ simulation_mode='correlation';
 % source positions
 %==========================================================================
 
-src_x=[1100000.0];
-src_z=[700000.0];
+src_x=[1750000.0];
+src_z=[1000000.0];
 
 %==========================================================================
 % receiver positions
 %==========================================================================
 
-%- a large number of receivers in an open rectangular configuration
-%rec_x=[50.0 50.0 50.0 50.0 50.0 50.0 50.0 50.0 50.0  50.0  50.0  50.0  60.0 70.0 80.0 90.0 100.0 110.0 120.0 130.0 60.0  70.0  80.0  90.0  100.0 110.0 120.0 130.0];
-%rec_z=[70.0 80.0 90.0 100.0 110.0 120.0 130.0 140.0 150.0 160.0 170.0 180.0 70.0 70.0 70.0 70.0 70.0  70.0  70.0  70.0  180.0 180.0 180.0 180.0 180.0 180.0 180.0 180.0];
-
 %- just one receiver
-%rec_x=[700000.0];
-%rec_z=[500000.0];
-
-%- a large number of receivers in a closed rectangular configuration
-%rec_x=[50.0  50.0  50.0  50.0  50.0   50.0    70.0  90.0 110.0 130.0   70.0  90.0 110.0 130.0  150.0 150.0 150.0 150.0 150.0  150.0];
-%rec_z=[70.0  90.0 110.0 130.0 150.0  170.0    70.0  70.0  70.0  70.0  170.0 170.0 170.0 170.0   70.0  90.0 110.0 130.0 150.0  170.0];
-
-rec_x=zeros(1,6);
-rec_z=zeros(1,6);
-n=1;
-
-for phi=-pi/4:pi/10:pi/2
-    rec_x(n)=src_x(1)+6.5e5*cos(phi);
-    rec_z(n)=src_z(1)+6.5e5*sin(phi);
-    n=n+1;
-end
+rec_x=[750000.0];
+rec_z=[1000000.0];
 
 %==========================================================================
 % absorbing boundaries
@@ -97,8 +73,14 @@ absorb_top=1;   % absorb waves on the top boundary
 absorb_bottom=1;% absorb waves on the bottom boundary
 
 %==========================================================================
+% path where adjoint sources are located
+%==========================================================================
+
+adjoint_source_path='../input/sources/adjoint/';
+
+%==========================================================================
 % make wavepropagation movie
 %==========================================================================
 
-make_movie='yes';                                            % 'yes' or 'no'
+make_movie='no';                                            % 'yes' or 'no'
 movie_file='../output/C_2_heterogeneous_whitened.mp4';     % output file name, should be .mp4

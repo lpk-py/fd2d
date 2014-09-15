@@ -12,7 +12,7 @@
 % measurement:  'waveform_difference' for L2 waveform difference
 %               'cc_time_shift' for cross-correlation time shift
 %
-% When u_0, i.e. the observed displacement seismograms, are set to zero, 
+% When u_0=0, i.e. the observed displacement seismograms, are set to zero, 
 % the code performs data-independent measurements. 
 % 
 %==========================================================================

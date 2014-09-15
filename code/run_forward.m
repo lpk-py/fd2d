@@ -106,6 +106,8 @@ v=zeros(nx,nz);
 absbound=ones(nx,nz);
 
 v_forward=zeros(nt/5,nx,nz);
+dx_u_forward=zeros(nt/5,nx,nz);
+dz_u_forward=zeros(nt/5,nx,nz);
 
 sxy=zeros(nx-1,nz);
 szy=zeros(nx,nz-1);
@@ -207,6 +209,8 @@ for n=1:length(t)
     
         if (mod(n,5)==0)
             v_forward(nt/5+1-n/5,:,:)=v(:,:);
+            dx_u_forward(nt/5+1-n/5,1:nx-1,:)=sxy./mu(1:nx-1,:);
+            dz_u_forward(nt/5+1-n/5,:,1:nz-1)=szy./mu(:,1:nz-1);
         end
         
     end
@@ -246,7 +250,9 @@ end
 %- store time-reversed forward field --------------------------------------
 
 if strcmp(simulation_mode,'forward')
-    save('../../output/v_forward','v_forward');
+    save('../output/v_forward','v_forward');
+    save('../output/dz_u_forward','dz_u_forward');
+    save('../output/dx_u_forward','dx_u_forward');
 end
 
 %- store Fourier transformed velocity Greens function ---------------------

@@ -69,6 +69,7 @@ stf=zeros(ns,nt);
 for n=1:ns
     fid=fopen([adjoint_source_path '/src_' num2str(n)],'r');
     stf(n,1:nt)=fscanf(fid,'%g',nt);
+    stf(n,nt:-1:1)=stf(n,1:nt);
 end
 
 %- compute indices for adjoint source locations ---------------------------
@@ -85,6 +86,13 @@ for i=1:ns
     src_z_id(i)=min(find(min(abs(z-src_z(i)))==abs(z-src_z(i))));
 
 end
+
+%==========================================================================
+% initialise absorbing boundaries.
+%==========================================================================
+
+absbound=ones(nx,nz);
+init_absbound;
    
 %==========================================================================
 % iterate
@@ -103,6 +111,10 @@ for n=1:nt
     %- update velocity field ----------------------------------------------
     
     v=v+dt*DS./rho;
+    
+    %- apply absorbing boundary taper -------------------------------------
+    
+    v=v.*absbound;
     
     %- compute derivatives of current velocity and update stress tensor ---
     
@@ -198,5 +210,5 @@ K_rho=rho.*K_rho;
 K_beta=sqrt(mu./rho).*K_beta;
 
 K_rho_0=rho.*K_rho_0;
-K_mu_0=mu.*K_mu_0,
+K_mu_0=mu.*K_mu_0;
 

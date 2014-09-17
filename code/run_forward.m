@@ -39,7 +39,7 @@ plot_model;
 
 %- forward simulations ('forward', 'forward_green') -----------------------
 
-if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_green'))
+if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_store') || strcmp(simulation_mode,'forward_green'))
 
     %- time axis ----------------------------------------------------------
     
@@ -152,7 +152,7 @@ for n=1:length(t)
     
     %- add point sources --------------------------------------------------
     
-    if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_green'))
+    if (strcmp(simulation_mode,'forward') || strcmp(simulation_mode,'forward_store') || strcmp(simulation_mode,'forward_green'))
     
         for i=1:ns
             DS(src_x_id(i),src_z_id(i))=DS(src_x_id(i),src_z_id(i))+stf(n);
@@ -205,7 +205,7 @@ for n=1:length(t)
     
     %- store time-reversed history ----------------------------------------
     
-    if (strcmp(simulation_mode,'forward'))
+    if (strcmp(simulation_mode,'forward_store'))
     
         if (mod(n,5)==0)
             v_forward(nt/5+1-n/5,:,:)=v(:,:);
@@ -249,7 +249,7 @@ end
 
 %- store time-reversed forward field --------------------------------------
 
-if strcmp(simulation_mode,'forward')
+if strcmp(simulation_mode,'forward_store')
     save('../output/v_forward','v_forward');
     save('../output/dz_u_forward','dz_u_forward');
     save('../output/dx_u_forward','dx_u_forward');

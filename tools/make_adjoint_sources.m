@@ -12,7 +12,7 @@
 % measurement:  'waveform_difference' for L2 waveform difference
 %               'cc_time_shift' for cross-correlation time shift
 %
-% When u_0=0, i.e. the observed displacement seismograms, are set to zero, 
+% When u_0, i.e. the observed displacement seismograms, are set to zero, 
 % the code performs data-independent measurements. 
 % 
 %==========================================================================
@@ -26,6 +26,7 @@ function misfit=make_adjoint_sources(u,u_0,t,veldis,measurement)
 path(path,'../input/');
 path(path,'../code/propagation/');
 path(path,'misfits/')
+
 input_parameters;
 
 fid_loc=fopen([adjoint_source_path 'source_locations'],'w');
@@ -78,15 +79,19 @@ for n=1:length(rec_x)
     [right,dummy]=ginput(1);
     
     width=t(end)/10;
-    u(n,:)=taper(u(n,:),t,left,right,width);
-    u_0(n,:)=taper(u_0(n,:),t,left,right,width);
+    u_sel=taper(u(n,:),t,left,right,width);
+    u_0_sel=taper(u_0(n,:),t,left,right,width);
+    
     
     %- compute misfit and adjoint source time function --------------------
     
     if strcmp(measurement,'waveform_difference')
-        [misfit_n,adstf]=waveform_difference(u(n,:),u_0(n,:),t);
+        [misfit_n,adstf]=waveform_difference(u_sel,u_0_sel,t);
     elseif strcmp(measurement,'cc_time_shift')
-        [misfit_n,adstf]=cc_time_shift(u(n,:),u_0(n,:),t);
+        [misfit_n,adstf]=cc_time_shift(u_sel,u_0_sel,t);
+    elseif strcmp(measurement,'log_amplitude_ratio')
+        win = get_window(t,left,right,'hann');
+        [misfit_n,adstf]=log_amp_ratio(u,u_0,win,t);
     end
     
     misfit=misfit+misfit_n;

@@ -34,7 +34,7 @@ s=conj(s);
 
 %- initialise noise spectrum ----------------------------------------------
 
-make_noise_spectrum;
+make_noise_source;
   
 %- approximate inverse Fourier transform ----------------------------------
 
@@ -58,14 +58,14 @@ figure
 set(gca,'FontSize',20)
 
 subplot(2,1,1)
-plot(f_sample,abs(noise_spectrum'.*s),'k');
+plot(f_sample,abs(noise_spectrum.*s),'k');
 xlabel('\nu [Hz]','FontSize',20)
 ylabel('amplitude spectrum','FontSize',20)
 
 title(['displacement spectrum at position x=' num2str(x(x_id)) ' m, z=' num2str(z(z_id)) ' m'],'FontSize',20)
 
 subplot(2,1,2)
-plot(f_sample,angle(noise_spectrum'.*s),'k');
+plot(f_sample,angle(noise_spectrum.*s),'k');
 xlabel('\nu [Hz]','FontSize',20)
 ylabel('phase spectrum','FontSize',20)
 

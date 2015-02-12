@@ -44,7 +44,7 @@ axis equal
 
 %- axis, scaling, etc. ----------------------------------------------------
 
-colormap(cm);
+%colormap(cm);
 shading interp
 colorbar
 
@@ -53,5 +53,3 @@ caxis([-m m]);
 
 xlabel('x [m]','FontSize',20);
 ylabel('z [m]','FontSize',20);
-
-

@@ -8,8 +8,8 @@ sources_everywhere = true; %false
 
 %- characteristics of the noise spectrum ----------------------------------
 %- only needed in this routine --------------------------------------------
-f_peak=[0.0075,0.0085];       % peak frequency in Hz
-bandwidth=[0.002,0.005];    % bandwidth in Hz
+f_peak=[0.007,0.0085];       % peak frequency in Hz
+bandwidth=[0.001,0.005];    % bandwidth in Hz
 
 %- Geographic distribution of sources -------------------------------------
 %- Location and width of a Gaussian 'blob' --------------------------------
@@ -22,9 +22,8 @@ sourcearea_width=[0.4e6,0.3e6];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % get model setup
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-path(path,'../input/');
-path(path,'../code/propagation/');
-path(path,'../input/interferometry/');
+path(path,'..');
+path(path,'../../code/propagation/');
 
 input_parameters;
 input_interferometry;
@@ -60,6 +59,17 @@ noise_source_distribution=zeros(nx,nz,n_noise_sources);
 %- if distribution homogeneous
 if sources_everywhere == true
     noise_source_distribution = noise_source_distribution +1.;
+    figure;
+    set(gca,'FontSize',20);
+    load cm_psd
+
+    pcolor(X,Z,noise_source_distribution(:,:,i)');
+    shading interp
+    colormap(cm_psd)
+    xlabel('x [m]','FontSize',20);
+    ylabel('z [m]','FontSize',20);
+    title('power-spectral density distribution of noise sources for region ','FontSize',20);    
+    
 else
 
     %- noise source geography for region 1 ------------------------------------

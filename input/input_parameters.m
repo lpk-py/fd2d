@@ -2,13 +2,13 @@
 % set basic simulation parameters
 %==========================================================================
 
-Lx=2.5e6;     % model extension in x-direction [m]
-Lz=2.0e6;     % model extension in y-direction [m]
+Lx=25e6;     % model extension in x-direction [m]
+Lz=15e6;     % model extension in y-direction [m]
 
-nx=400;     % grid points in x-direction
-nz=300;     % grid points in z-direction
+nx=360;     % grid points in x-direction
+nz=260;     % grid points in z-direction
 
-dt=0.50;     % time step [s]
+dt=5.;     % time step [s]
 nt=1000;     % number of iterations
 
 order=4;    % finite-difference order (2 or 4)
@@ -32,14 +32,14 @@ model_type=1;
 % source-time function
 %==========================================================================
 
-f_min=0.02;     % minimum frequency [Hz]
-f_max=0.05;     % maximum frequency [Hz]
+f_min=0.005;     % minimum frequency [Hz]
+f_max=0.01;     % maximum frequency [Hz]
 
 %==========================================================================
 % simulation mode
 %==========================================================================
 
-simulation_mode='forward';
+simulation_mode='noise_source_kernels';
 
 % 'forward'                 regular forward simulation
 % 'forward_green'           forward simulation where Fourier transform of the Greens function is computed on-the-fly (preparation to compute correlation function)
@@ -50,22 +50,24 @@ simulation_mode='forward';
 % source positions
 %==========================================================================
 
-src_x=[1750000.0];
-src_z=[1000000.0];
+%src_x=[15.83341e6];
+src_x=[13.5e6];
+src_z=[7.5e6];
 
 %==========================================================================
 % receiver positions
 %==========================================================================
 
 %- just one receiver
-rec_x=[750000.0];
-rec_z=[1000000.0];
+%rec_x=[9.16659e6];
+rec_x=[11.5e6];
+rec_z=[7.5e6];
 
 %==========================================================================
 % absorbing boundaries
 %==========================================================================
 
-width=150000.0;     % width of the boundary layer in km
+width=2e6;     % width of the boundary layer in m
 
 absorb_left=1;  % absorb waves on the left boundary
 absorb_right=1; % absorb waves on the right boundary
